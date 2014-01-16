@@ -1,4 +1,5 @@
-/bin/
-/Makefile
-/*.pro.user
 /.tmp/
+/*.tag
+/Debug/
+check_new_delete
+/bin/

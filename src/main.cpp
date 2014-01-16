@@ -22,10 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <iostream>
 
-#include "logger.h"
+#include "tLog.h"
+#include "tLog_Category_default.h"
 #include "impl.h"
 
 using namespace std;
+using namespace rlf_tlog;
 
 /*
 logs each new and delete
@@ -56,26 +58,35 @@ impl.cpp
 int main() {
 
    string logfile = "alloc_check";
-   alloccheck_log::logger().setLogfile( logfile );
-   alloccheck_log::logger().Info( lfm_, " Start  " );
+
+
+   bool b2 = logger().setLogfile( logfile );
+
+   if( b2 == false ) {
+      cout << "setLogfile: " << logfile << " path for logging dosn't exist: '" << logfile <<  "'" << endl;
+   }
+
+   logger().setLogLevel( eLevel::INFO, eCategory::_default );
+
+   LOGT_INFO( " Start  " );
 
    try {
       // unchecked
-      demo::tDemoClassNotChecked* a = demo::tDemoClassNotChecked::Create();
+      demo::tDemoClassNotChecked* a = demo::tDemoClassNotChecked::Create( "DemoClassNotChecked" );
 
       // checked
-      demo::tDemoClass1Checked* d = demo::tDemoClass1Checked::Create();
-      demo::tDemoClass2Checked* c = demo::tDemoClass2Checked::Create();
-      demo::tDemoClass3Checked* t = demo::tDemoClass3Checked::Create( "text" );
+      demo::tDemoClass1Checked* d = demo::tDemoClass1Checked::Create( "tDemoClass1Checked" );
+      demo::tDemoClass2Checked* c = demo::tDemoClass2Checked::Create( "tDemoClass2Checked" );
+      demo::tDemoClass3Checked* t = demo::tDemoClass3Checked::Create( "tDemoClass3Checked" );
       delete c;
       // d and t are memory leaks
 
 
    } catch( demo::tException& ex ) {
       string msg = ex.what();
-      alloccheck_log::logger().Info( lfm_, "tException: " + msg );
+      LOGT_INFO( "tException: " + msg );
    } catch( std::exception& rt ) {
-      alloccheck_log::logger().Info( lfm_, string( "Ex rt: " ) + rt.what() );
+      LOGT_INFO( string( "Ex rt: " ) + rt.what() );
    }
 
    alloccheck::ShowAllocList();

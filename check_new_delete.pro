@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
 
-DESTDIR += bin
+#DESTDIR += bin
 CONFIG  += x86_64
 
 
@@ -11,7 +11,7 @@ MOC_DIR = .tmp
 UI_DIR = .tmp
 RCC_DIR = .tmp
 
-
+QMAKE_CXXFLAGS += -gdwarf-3
 
 QMAKE_CXXFLAGS_DEBUG += -O0
 QMAKE_CXXFLAGS_DEBUG += -std=c++0x
@@ -22,7 +22,7 @@ QMAKE_CXXFLAGS_DEBUG += -Wextra
 QMAKE_CXXFLAGS_DEBUG += -Wno-unused
 QMAKE_CXXFLAGS_DEBUG -= -Wwrite-strings
 #QMAKE_CXXFLAGS_DEBUG -= -Wunused-variable
-#QMAKE_CXXFLAGS_DEBUG += -Weffc++
+QMAKE_CXXFLAGS_DEBUG += -Weffc++
 
 QMAKE_CXXFLAGS_RELEASE += -O2
 QMAKE_CXXFLAGS_RELEASE += -std=c++0x
@@ -37,14 +37,30 @@ QMAKE_CXXFLAGS_RELEASE -= -Wwrite-strings
 
 #QMAKE_LFLAGS += -Wl,--rpath=\\\$\$ORIGIN/lib
 
-LIBS= -lboost_thread-mt
+message("qmake check_new_delete")
+
+
+INCLUDEPATH += $$PWD/src
+INCLUDEPATH += $$PWD/src/log
+
 
 SOURCES += \
     src/main.cpp \
     src/impl.cpp \
-    src/logger.cpp
+    src/log/tLogImpl.cpp \
+    src/log/tLog.cpp
 
 HEADERS += \
     src/impl.h \
-    src/logger.h
+    src/log/tLogImpl.h \
+    src/log/tLogEnum.h \
+    src/log/tLogCategories.h \
+    src/log/tLog.h \
+    src/log/tLog_Category_default.h \
+    src/log/tLfm.h \
+    src/log/tLfmCL.h
 
+
+LIBS= -lboost_thread
+LIBS += -lboost_system #-lboost_system-mt
+LIBS += -lboost_filesystem #-lboost_filesystem-mt

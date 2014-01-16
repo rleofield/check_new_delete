@@ -19,16 +19,19 @@
 */
 
 
-#ifndef ALLOCCHECK_H
-#define ALLOCCHECK_H
+#ifndef RLF_ALLOCCHECK_H
+#define RLF_ALLOCCHECK_H
 
-#include "map"
+#include <map>
 
-#include "logger.h"
+#include "tLfm.h"
 
-using namespace alloccheck_log;
+using namespace rlf_tlfm;
 
 namespace alloccheck {
+
+
+
 
    typedef std::map<size_t, std::string>::const_iterator allocIterator;
 
@@ -50,7 +53,7 @@ namespace alloccheck {
       tAllocMap& getMutableAlloclist() {
          return alloclist;
       }
-      size_t alloccount;
+      int alloccount;
       int totalalloc;
 
    };
@@ -58,7 +61,7 @@ namespace alloccheck {
 
    //////////////////////////////////////////////////////////////////////////////////////
    // wird von new() aufgerufen, protokolliert Zeile, Name der Methode, Name der Klasse
-   void* LocalAlloc( size_t size, tLineFileMethod const& lfmcIn );
+   void* LocalAlloc( size_t size, tLfm const& lfmcIn );
 
    ////////////////////////////////////////////////////////////////////////////////////////////
    // wird von delete(void* p) aufgerufen
@@ -68,7 +71,10 @@ namespace alloccheck {
 }
 
 
+using std::string;
+
 namespace demo {
+
 
    class tException: public std::exception {
       std::string _what;
@@ -85,7 +91,7 @@ namespace demo {
       static void operator delete( void* );
       tDemoClass3Checked( const std::string& txt ): v( txt )  {      }
    public:
-      string v ;
+      std::string v ;
       static tDemoClass3Checked* Create( const std::string& txt );
    };
 
@@ -97,7 +103,7 @@ namespace demo {
       std::string var1;
       std::string var2;
       std::string var3;
-      static tDemoClass2Checked* Create();
+      static tDemoClass2Checked* Create( const std::string& txt );
    };
 
    class tDemoClass1Checked {
@@ -106,14 +112,14 @@ namespace demo {
       tDemoClass1Checked(): value()  {}
    public:
       string value;
-      static tDemoClass1Checked* Create();
+      static tDemoClass1Checked* Create( const std::string& txt );
    };
 
    class tDemoClassNotChecked {
       tDemoClassNotChecked() : value()   { }
    public:
       std::string value;
-      static tDemoClassNotChecked* Create();
+      static tDemoClassNotChecked* Create( const std::string& txt );
    };
 
 } // end of namespace

@@ -23,11 +23,22 @@
 
 #include <string>
 #include <string.h>
+#include <new>
 
 
 #include "impl.h"
-#include "logger.h"
 
+#include "tLog.h"
+
+#include "tLog_Category_default.h"
+
+using namespace rlf_tlog;
+using std::string;
+using rlf_tlog::eCategory;
+using rlf_tlog::eLevel;
+
+
+using std::pair;
 
 namespace strings {
 
@@ -41,42 +52,43 @@ namespace strings {
 namespace demo {
 
 
-   tDemoClassNotChecked* tDemoClassNotChecked::Create() {
+
+   tDemoClassNotChecked* tDemoClassNotChecked::Create( const std::string& ) {
       return new tDemoClassNotChecked();
    }
 
 
-   void* tDemoClass2Checked::operator new( size_t size, alloccheck_log::tLfm const& lfm ) {
+   void* tDemoClass2Checked::operator new( size_t size, tLfm const& lfm ) {
       return alloccheck::LocalAlloc( size, lfm );
    }
 
    void tDemoClass2Checked::operator delete( void* p ) {
       alloccheck::LocalDelete( p );
    }
-   tDemoClass2Checked* tDemoClass2Checked::Create() {
+   tDemoClass2Checked* tDemoClass2Checked::Create( const std::string& ) {
       return new( lfm_ ) tDemoClass2Checked();
    }
 
 
-   void* tDemoClass1Checked::operator new( size_t size, alloccheck_log::tLfm const& lfm ) {
+   void* tDemoClass1Checked::operator new( size_t size, tLfm const& lfm ) {
       return alloccheck::LocalAlloc( size, lfm );
    }
    void tDemoClass1Checked::operator delete( void* p ) {
       alloccheck::LocalDelete( p );
    }
-   tDemoClass1Checked* tDemoClass1Checked::Create() {
+   tDemoClass1Checked* tDemoClass1Checked::Create( const std::string& ) {
       return new( lfm_ ) tDemoClass1Checked();
    }
 
 
-   void* tDemoClass3Checked::operator new( size_t size, alloccheck_log::tLfm const& lfm ) {
+   void* tDemoClass3Checked::operator new( size_t size, tLfm const& lfm ) {
       return alloccheck::LocalAlloc( size, lfm );
    }
    void tDemoClass3Checked::operator delete( void* p ) {
       alloccheck::LocalDelete( p );
    }
-   tDemoClass3Checked* tDemoClass3Checked::Create( string const& s ) {
-      return new( lfm_ ) tDemoClass3Checked( s );
+   tDemoClass3Checked* tDemoClass3Checked::Create( string const& txt ) {
+      return new( lfm_ ) tDemoClass3Checked( txt );
    }
 
 
@@ -148,10 +160,11 @@ namespace alloccheck {
 
    //////////////////////////////////////////////////////////////////////////////////////
    // wird von new() aufgerufen, protokolliert Zeile, Name der Methode, Name der Klasse
-   void* LocalAlloc( size_t size, alloccheck_log::tLfm const& lfmcIn )  {
+   void* LocalAlloc( size_t size, tLfm const& lfm )  {
 
       // es wird Speicher mit new() angefordert, + sizeof(AllocHeader) + Platz für eine magic Number am Ende
-      char* p = ::new( nothrow ) char[sizeof( AllocHeader ) + size + sizeof( size_t )];
+      //char* p = ::new( nothrow ) char[sizeof( AllocHeader ) + size + sizeof( size_t )];
+      char* p = ::new char[sizeof( AllocHeader ) + size + sizeof( size_t )];
 
       if( NULL == p ) {
          throw "allocation fails : no free memory";
@@ -160,9 +173,9 @@ namespace alloccheck {
       char* p_start = p + sizeof( AllocHeader );
       char* p_magicend = p + sizeof( AllocHeader ) + size;
 
-      size_t line = lfmcIn.line;
-      string file = lfmcIn.file;
-      string method = lfmcIn.method;
+      size_t line = lfm.line();
+      string file = lfm.file();
+      string method = lfm.method();
 
       // strip path from file
       size_t i = file.rfind( pathSlash );
@@ -186,11 +199,11 @@ namespace alloccheck {
       tAllocCheckControlMap& check = alloccheckInstance();
 
       // build info message for logging
-      string info =   "size: " + strings::toString( size )
+      string info =   "size: " + strings::toString( static_cast<int>( size ) )
                       + ", total: " + strings::toString( check.totalalloc )
                       + ", file: " +  file
                       + ", method: " +  method
-                      + ", line: " + strings::toString( line );
+                      + ", line: " + strings::toString( static_cast<int>( line ) );
 
       if( info.length() > maxallocinfo - 1 ) {
          info = info.substr( 0, maxallocinfo - 1 );
@@ -213,23 +226,23 @@ namespace alloccheck {
       {
          //  u.U. Sperre, wenn mehrere Threads vorhanden sind
          check.alloccount++;
-         check.totalalloc += size;
+         check.totalalloc += static_cast<int>( size );
          tAllocMap& allocList = check.getMutableAlloclist();
          allocIterator it = allocList.find( key );
 
          if( it != allocList.end() ) {
             string ll = grepMarker
                         + " key in der map vorhanden, fatal  "
-                        + strings::toString( key )
+                        + strings::toString( static_cast<int>( key ) )
                         + ", info: " + info + "'";
-            alloccheck_log::logger().Info( lfm_, ll );
+            LOGT_INFO( ll );
             exit( 0 );
          }
 
          allocList[key] = info;
       }
-      string logLine = grepMarker + " Alloc count:  " + strings::toString( check.alloccount ) + ", info: " + info;
-      alloccheck_log::logger().Info( lfm_, logLine );
+      string logLine = grepMarker + " Alloc count:  " + strings::toString( static_cast<int>( check.alloccount ) ) + ", info: " + info;
+      LOGT_INFO( logLine );
       return ( void* )( p_start );
    }
 
@@ -237,7 +250,7 @@ namespace alloccheck {
    // wird von delete() aufgerufen
    void LocalDelete( void* p )  {
 
-      alloccheck_log::tLog const& logger_ = alloccheck_log::logger();
+      //alloccheck_log::tLog const& logger_ = alloccheck_log::logger();
       // berechne den eigentlichen Beginn des allozierten Speichers
       char* p_start = ( ( char* )p - sizeof( AllocHeader ) );
 
@@ -257,7 +270,7 @@ namespace alloccheck {
       size_t magic_at_end = *( ( size_t* )p_magicend );
 
       if( magic != magic_at_end ) {
-         logger_.Info( lfm_,  grepMarker + " buffer overflow at: " + string( info ) );
+         LOGT_INFO( grepMarker + " buffer overflow at: " + string( info ) );
          exit( 0 );
       }
 
@@ -265,22 +278,22 @@ namespace alloccheck {
 
       tAllocCheckControlMap& check = alloccheckInstance();
 
-      size_t lastalloccount = 0;
+      int lastalloccount = 0;
       {
          //nsl::tLock l(m);
          tAllocMap& allocList = check.getMutableAlloclist();
          allocIterator it = allocList.find( key );
-         lastalloccount = allocList.size();
+         lastalloccount = static_cast<int>( allocList.size() );
          check.alloccount--;
 
          if( it != allocList.end() ) {
             allocList.erase( key );
          } else {
-            logger_.Info( lfm_,  grepMarker + " Delete nicht in map gefunden: " + string( info ) );
+            LOGT_INFO( grepMarker + " Delete nicht in map gefunden: " + string( info ) );
             exit( 0 );
          }
 
-         check.totalalloc -= size;
+         check.totalalloc -= static_cast<int>( size );
       }
 
       string infolog = grepMarker
@@ -289,16 +302,16 @@ namespace alloccheck {
                        + ", mem left: "
                        + strings::toString( check.totalalloc )
                        + ", info: '" + info + "'";
-      logger_.Info( lfm_, infolog );
+      LOGT_INFO( infolog );
 
       // final delete of allocated memory
       delete []( p_start );
 
       tAllocMap const& allocList2 = check.getAlloclist();
 
-      if( check.alloccount != allocList2.size() ) {
+      if( check.alloccount != static_cast<int>( allocList2.size() ) ) {
          int diff = check.alloccount - lastalloccount;
-         logger_.Info( lfm_,  grepMarker + " Error in 'delete': missingcount: " + strings::toString( diff ) );
+         LOGT_INFO( grepMarker + " Error in 'delete': missingcount: " + strings::toString( diff ) );
       }
 
       // ok
@@ -309,19 +322,19 @@ namespace alloccheck {
       alloccheck::tAllocMap const& allocList = alloccheck::alloccheckInstance().getAlloclist();
 
       if( allocList.size() > 0 ) {
-         alloccheck_log::logger().Info( lfm_, " not deleted pointers: " + strings::toString( allocList.size() ) );
+         LOGT_INFO( " not deleted pointers: " + strings::toString( static_cast<int>( allocList.size() ) ) );
          alloccheck::allocIterator itstart = allocList.begin();
          alloccheck::allocIterator itend = allocList.end();
 
          while( itstart != itend ) {
             pair<size_t, string> pa = *itstart;
             string info = pa.second;
-            alloccheck_log::logger().Info( lfm_, info );
+            LOGT_INFO( info );
             ++itstart;
          }
       }
 
-      alloccheck_log::logger().Info( lfm_, " end of program, number of not deleted pointers: " + strings::toString( allocList.size() ) );
+      LOGT_INFO( " end of program, number of not deleted pointers: " + strings::toString( static_cast<int>( allocList.size() ) ) );
 
    }
 
