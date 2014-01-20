@@ -24,16 +24,7 @@
 
 #include <vector>
 
-#ifdef _WIN32
-#pragma warning( disable : 4291 )
-#pragma warning( disable : 4800 )
-#pragma warning( disable : 4996 )
-#pragma warning( disable : 4804 )
-#include  <io.h>
-#include  <stdio.h>
-#include  <stdlib.h>
-const std::locale locDE( "German_germany" );
-#endif
+
 
 #include "tLfmCL.h"
 #include "tLogCategories.h"
