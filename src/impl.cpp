@@ -38,6 +38,13 @@ using rlf_tlog::eCategory;
 using rlf_tlog::eLevel;
 
 
+#ifdef _WIN32
+#pragma warning( disable : 4291 ) // Warning   30 warning C4291: 'void *txml::XmlComment::operator new(size_t,const nsl::tLfm &)' : no matching operator delete found; memory will not be freed if initialization throws an exception   c:\raprojekte\snippets\xmldemo\demo.cpp   218
+#pragma warning( disable : 4800 ) // Warning   7  warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)   c:\raprojekte\snippets\xmldemo\mxml_base.h   57
+#pragma warning( disable : 4996 ) // Warning   1  warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.   c:\raprojekte\snippets\xmldemo\stringhelper.cpp 360
+#pragma warning( disable : 4804 ) // Warning   12 warning C4804: '>' : unsafe use of type 'bool' in operation c:\raprojekte\snippets\xmldemo\mxml_document.cpp   407
+#endif
+
 using std::pair;
 
 namespace strings {
