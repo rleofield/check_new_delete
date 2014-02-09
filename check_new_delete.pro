@@ -64,3 +64,7 @@ HEADERS += \
 LIBS= -lboost_thread
 LIBS += -lboost_system #-lboost_system-mt
 LIBS += -lboost_filesystem #-lboost_filesystem-mt
+
+OTHER_FILES += \
+    lgpl-3.0.txt \
+    README.md
