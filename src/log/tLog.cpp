@@ -46,6 +46,18 @@ namespace rlf_tlog {
       pImpl->setLogLevel( level_, cat );
       return tmp;
    }
+   eLevel tLog::getLogLevel( eCategory cat )const {
+      eLevel tmp = pImpl->getLogLevel( cat );
+      return tmp;
+   }
+   eLevel tLog::findLevel( int level ) {
+      return tLogImpl::findLevel( level );
+   }
+   eCategory tLog::findCategory( int cat ) {
+      return tLogImpl::findCategory( cat );
+   }
+
+
    void tLog::log( tLfmCL const& lfm ) const {
       pImpl->log( int2type<useLog>(), lfm );
    }

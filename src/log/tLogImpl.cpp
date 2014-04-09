@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include "tLogImpl.h"
-#include "tLfmCL.h"
 
 
 using std::stringstream;
@@ -223,21 +222,22 @@ namespace rlf_tlog {
 
    namespace {
       tCat def = tCat( eCategory::_default, "" );
+      tCat rimg = tCat( eCategory::Cat_rimg, "" );
       tCat A = tCat( eCategory::Cat_A, "a" );
       tCat B = tCat( eCategory::Cat_B, "b" );
       tCat C = tCat( eCategory::Cat_C, "c" );
       tCat D = tCat( eCategory::Cat_D, "d" );
 
-      tLev LDEBUG = tLev( eLevel::LDEBUG, "DEBUG" );
+      tLev DEBUG = tLev( eLevel::LDEBUG, "DEBUG" );
       tLev INFO  = tLev( eLevel::INFO, "INFO " );
       tLev WARN  = tLev( eLevel::WARN, "WARN " );
-      tLev LERROR = tLev( eLevel::LERROR, "ERROR" );
+      tLev ERROR_ = tLev( eLevel::LERROR, "ERROR" );
       tLev FATAL = tLev( eLevel::FATAL, "FATAL" );
       tLev NONE = tLev( eLevel::NONE, "" );
    }
 
-   std::vector<tCat> tLogImpl::_cats = list_of( def )( A )( B )( C )( D );
-   std::vector<tLev> tLogImpl::_levs = list_of( LDEBUG )( INFO )( WARN )( LERROR )( FATAL )( NONE );
+   std::vector<tCat> tLogImpl::_cats = list_of( def )( rimg )( A )( B )( C )( D );
+   std::vector<tLev> tLogImpl::_levs = list_of( DEBUG )( INFO )( WARN )( ERROR_ )( FATAL )( NONE );
 
    std::string tLogImpl::to_string( eLevel lev_ )const {
       std::vector<tLev>::const_iterator f = find( _levs.begin(), _levs.end(), lev_ );
@@ -357,6 +357,27 @@ namespace rlf_tlog {
 
       return category->cat_level();
    }
+
+   eLevel tLogImpl::findLevel( int level_ ) {
+      std::vector<tLev>::const_iterator level = find( _levs.begin(), _levs.end(), level_ );
+
+      if( level == _levs.end() ) {
+         return eLevel::NONE;
+      }
+
+      return *level;
+   }
+   eCategory tLogImpl::findCategory( int cat_ ) {
+
+      std::vector<tCat>::iterator category = find( _cats.begin(), _cats.end(), cat_ );
+
+      if( category == _cats.end() ) {
+         return eCategory::_default;
+      }
+
+      return *category;
+   }
+
 
    bool tLogImpl::check( eCategory cat, eLevel levFunction ) const {
       eLevel level_category = getLogLevel( cat );
