@@ -19,7 +19,9 @@
  ------------------------------------------------------------------------------
 */
 
-
+#include <iomanip>
+#include <fstream>
+#include <iostream>
 
 #include "tLog.h"
 #include "tLogImpl.h"
@@ -41,6 +43,24 @@ namespace rlf_tlog {
       delete pImpl;
    }
 
+   eLevel tLog::setLogLevelDebug( eCategory cat )const {
+      return setLogLevel( eLevel::LDEBUG, cat );
+   }
+   eLevel tLog::setLogLevelInfo( eCategory cat )const {
+      return setLogLevel( eLevel::INFO, cat );
+   }
+   eLevel tLog::setLogLevelWarn( eCategory cat )const {
+      return setLogLevel( eLevel::WARN, cat );
+   }
+   eLevel tLog::setLogLevelError( eCategory cat )const {
+      return setLogLevel( eLevel::LERROR, cat );
+   }
+   eLevel tLog::setLogLevelFatal( eCategory cat )const {
+      return setLogLevel( eLevel::FATAL, cat );
+   }
+
+
+
    eLevel tLog::setLogLevel( eLevel level_, eCategory cat )const {
       eLevel tmp = pImpl->getLogLevel( cat );
       pImpl->setLogLevel( level_, cat );
@@ -58,7 +78,10 @@ namespace rlf_tlog {
    }
 
 
+
    void tLog::log( tLfmCL const& lfm ) const {
+      //      std::cout << abc << std::endl;
+      //      std::cout << abc_ << std::endl;
       pImpl->log( int2type<useLog>(), lfm );
    }
 

@@ -39,6 +39,9 @@ namespace rlf_tlog {
 namespace rlf_tlog {
    using std::string;
 
+   inline void noLogFunc() {
+      return;
+   }
 
    class tLog {
       rlf_tlog::tLogImpl* pImpl;
@@ -50,6 +53,12 @@ namespace rlf_tlog {
 
       // write 'txt' to logfile
       void log( tLfmCL const& lfmc ) const ;
+
+      eLevel setLogLevelDebug( eCategory cat  = eCategory::_default )const;
+      eLevel setLogLevelInfo( eCategory cat  = eCategory::_default )const;
+      eLevel setLogLevelWarn( eCategory cat  = eCategory::_default )const;
+      eLevel setLogLevelError( eCategory cat  = eCategory::_default )const;
+      eLevel setLogLevelFatal( eCategory cat  = eCategory::_default )const;
 
       eLevel setLogLevel( eLevel level, eCategory cat  = eCategory::_default )const;
       eLevel getLogLevel( eCategory cat  = eCategory::_default )const;
@@ -85,6 +94,9 @@ namespace rlf_tlog {
 #define L_B_DEBUG
 #define L_C_DEBUG
 #define L_D_DEBUG
+#define L_CALLBACK_DEBUG
+
+#define L_TIFF_DEBUG
 
 #endif
 

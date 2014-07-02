@@ -151,14 +151,24 @@ namespace alloccheck {
    const size_t maxalloc = 32;      // Platz für Filename, Klassenname, Methodenname im Header'
    const size_t maxallocinfo = 128; // Platz ur die Loghging-Informatiom im Header'
    struct AllocHeader {             // Header, der jedem Speicherbereich vorangestellt wird
-      size_t size;               // Grösse des allozierten Speichers
-      size_t line;               // Zeiel, in der new() aufgerufen wurde
-      size_t magic;              // magic number, am Ende des speichers, Test für Buffer Overflow
       char file[maxalloc];       // filename
       char info[maxallocinfo];   // logging Information
       char _class[maxalloc];     // Name der Klasse, für die new() aufgerufen wurde
       char function[maxalloc];   // Name der Function, in der new() aufgerufen wurde
+      size_t size;               // Grösse des allozierten Speichers
+      size_t line;               // Zeiel, in der new() aufgerufen wurde
+      size_t magic;              // magic number, am Ende des speichers, Test für Buffer Overflow
+			void set();
    };
+			void AllocHeader::set(){
+				memset(&size, 7, sizeof(size_t));
+				memset(&line, 7, sizeof(size_t));
+				memset(&magic, 7, sizeof(size_t));
+				memset( file, 7, maxalloc);
+				memset( info, 7, maxallocinfo);
+				memset( _class, 7, maxalloc);
+				memset( function, 7, maxalloc);
+			}
 
 
    // statischer Marker im Logfile,
@@ -171,14 +181,14 @@ namespace alloccheck {
 
       // es wird Speicher mit new() angefordert, + sizeof(AllocHeader) + Platz für eine magic Number am Ende
       //char* p = ::new( nothrow ) char[sizeof( AllocHeader ) + size + sizeof( size_t )];
-      char* p = ::new char[sizeof( AllocHeader ) + size + sizeof( size_t )];
+      char* p_ = ::new char[sizeof( AllocHeader ) + size + sizeof( size_t )];
 
-      if( NULL == p ) {
+      if( NULL == p_ ) {
          throw "allocation fails : no free memory";
       }
 
-      char* p_start = p + sizeof( AllocHeader );
-      char* p_magicend = p + sizeof( AllocHeader ) + size;
+      char* p_start = p_ + sizeof( AllocHeader );
+      char* p_magicend = p_ + sizeof( AllocHeader ) + size;
 
       size_t line = lfm.line();
       string file = lfm.file();
@@ -197,7 +207,8 @@ namespace alloccheck {
       file = clip_at_pos( file, maxalloc - 1 );
       method = clip_at_pos( method, maxalloc - 1 );
 
-      AllocHeader* pHeader = ( AllocHeader* )p;
+      AllocHeader* pHeader = ( AllocHeader* )p_;
+			pHeader->set();
 
       if( file.size() > maxalloc - 1 ) {
          file = file.substr( 0, maxalloc - 1 );
@@ -218,7 +229,7 @@ namespace alloccheck {
 
       pHeader->size = size;
       pHeader->line = line;
-      pHeader->magic = rand();
+      pHeader->magic = 5555; //rand();
 
       pHeader->file[0] = 0;
       pHeader->info[0] = 0;
@@ -260,12 +271,14 @@ namespace alloccheck {
       //alloccheck_log::tLog const& logger_ = alloccheck_log::logger();
       // berechne den eigentlichen Beginn des allozierten Speichers
       char* p_start = ( ( char* )p - sizeof( AllocHeader ) );
+			std::vector<char> v(p_start, p_start+ sizeof(AllocHeader) );
 
       AllocHeader* pHeader = ( AllocHeader* )( p_start );
-      // wenn eine Bufferoverflow auftrat, sind diese Stellen nicht mehr 0, d.h. hier auf 0 setzen
-      pHeader->file[maxalloc - 1] = 0;
-      pHeader->info[maxallocinfo - 1] = 0;
-      pHeader->_class[maxalloc - 1] = 0;
+      // wenn ein Bufferoverflow auftrat, sind diese Stellen nicht mehr 0, d.h. hier auf 0 setzen
+			//		damit man die strings kopieren kann
+      //pHeader->file[maxalloc - 1] = 0;
+      //pHeader->info[maxallocinfo - 1] = 0;
+      //pHeader->_class[maxalloc - 1] = 0;
 
       string file = pHeader->file;
       string info = pHeader->info;

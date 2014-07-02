@@ -51,17 +51,24 @@ using namespace rlf_tlog;
 // logline in Code
 #ifdef L_DEFAULT_DEBUG
 // enable default category
-#define LOGT_DEBUG(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LDEBUG, (exp) )))
+#define LOGT_DEBUG(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LDEBUG, exp ) ) )
 #define LOGT_INFO(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::INFO, (exp)  )))
 #define LOGT_WARN(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::WARN, (exp) )))
 #define LOGT_ERROR(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LERROR, (exp)  )))
 #define LOGT_FATAL(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::FATAL, (exp) )))
+
+//#define LOGT_COUT_DEBUG(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LDEBUG, exp ) ) , std::cout << (exp) << std::endl  )
+//#define LOGT_COUT_INFO(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::INFO, (exp)  )) , std::cout << (exp) << std::endl )
+//#define LOGT_COUT_WARN(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::WARN, (exp) )) , std::cout << (exp) << std::endl )
+//#define LOGT_COUT_ERROR(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LERROR, (exp)  )) , std::cout << (exp) << std::endl )
+//#define LOGT_COUT_FATAL(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::FATAL, (exp) )) , std::cout << (exp) << std::endl )
+
 #else
-#define LOGT_DEBUG(exp)   {}
-#define LOGT_INFO(exp)    {}
-#define LOGT_WARN(exp)    {}
-#define LOGT_ERROR(exp)   {}
-#define LOGT_FATAL(exp)   {}
+#define LOGT_DEBUG(exp)   (noLogFunc())
+#define LOGT_INFO(exp)    (noLogFunc())
+#define LOGT_WARN(exp)    (noLogFunc())
+#define LOGT_ERROR(exp)   (noLogFunc())
+#define LOGT_FATAL(exp)   (noLogFunc())
 #endif
 
 

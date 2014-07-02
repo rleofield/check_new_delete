@@ -76,9 +76,17 @@ int main() {
 
       // checked
       demo::tDemoClass1Checked* d = demo::tDemoClass1Checked::Create( "tDemoClass1Checked" );
-      demo::tDemoClass2Checked* c = demo::tDemoClass2Checked::Create( "tDemoClass2Checked" );
+      demo::tDemoClass2Checked* p_c = demo::tDemoClass2Checked::Create( "tDemoClass2Checked" );
       demo::tDemoClass3Checked* t = demo::tDemoClass3Checked::Create( "tDemoClass3Checked" );
-      delete c;
+			//*((int*)p_c-1) = 1;
+			//*((int*)c-2) = 1;
+			//*((int*)c-3) = 1;
+			//*((int*)c-4) = 1;
+			//*((int*)c-5) = 1;
+			//*((int*)c-6) = 1;
+			//*((int*)c-7) = 1;
+
+      delete p_c;
       // d and t are memory leaks
 
 
