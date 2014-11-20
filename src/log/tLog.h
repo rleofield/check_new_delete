@@ -37,7 +37,6 @@ namespace rlf_tlog {
 }
 
 namespace rlf_tlog {
-   using std::string;
 
    inline void noLogFunc() {
       return;
@@ -94,7 +93,6 @@ namespace rlf_tlog {
 #define L_B_DEBUG
 #define L_C_DEBUG
 #define L_D_DEBUG
-#define L_CALLBACK_DEBUG
 
 #define L_TIFF_DEBUG
 

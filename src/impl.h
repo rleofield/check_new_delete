@@ -28,47 +28,47 @@
 
 using namespace rlf_tlfm;
 
-namespace alloccheck {
+//namespace alloccheck {
 
 
 
 
-   typedef std::map<size_t, std::string>::const_iterator allocIterator;
+//   typedef std::map<size_t, std::string>::const_iterator allocIterator;
 
-   typedef std::map<size_t, std::string> tAllocMap;
+//   typedef std::map<size_t, std::string> tAllocMap;
 
-   class tAllocCheckControlMap {
-      tAllocMap alloclist;
+////   class tAllocCheckControlMap {
+////      tAllocMap alloclist;
 
-      // keine Kopien möglich
-      tAllocCheckControlMap( tAllocCheckControlMap const& pos );
-      void operator=( tAllocCheckControlMap const& pos );
+////      // keine Kopien möglich
+////      tAllocCheckControlMap( tAllocCheckControlMap const& pos );
+////      void operator=( tAllocCheckControlMap const& pos );
 
-   public:
-      tAllocCheckControlMap(): alloclist(), alloccount( 0 ), totalalloc( 0 ) {}
+////   public:
+////      tAllocCheckControlMap(): alloclist(), alloccount( 0 ), totalalloc( 0 ) {}
 
-      tAllocMap const& getAlloclist()const {
-         return alloclist;
-      }
-      tAllocMap& getMutableAlloclist() {
-         return alloclist;
-      }
-      int alloccount;
-      int totalalloc;
+////      tAllocMap const& getAlloclist()const {
+////         return alloclist;
+////      }
+////      tAllocMap& getMutableAlloclist() {
+////         return alloclist;
+////      }
+////      int alloccount;
+////      int totalalloc;
 
-   };
-   tAllocCheckControlMap& alloccheckInstance();
+////   };
+////   tAllocCheckControlMap& alloccheckInstance();
 
-   //////////////////////////////////////////////////////////////////////////////////////
-   // wird von new() aufgerufen, protokolliert Zeile, Name der Methode, Name der Klasse
-   void* LocalAlloc( size_t size, tLfm const& lfmcIn );
+//   //////////////////////////////////////////////////////////////////////////////////////
+//   // wird von new() aufgerufen, protokolliert Zeile, Name der Methode, Name der Klasse
+//   void* LocalAlloc( size_t size, tLfm const& lfmcIn );
 
-   ////////////////////////////////////////////////////////////////////////////////////////////
-   // wird von delete(void* p) aufgerufen
-   void LocalDelete( void* p ) ;
+//   ////////////////////////////////////////////////////////////////////////////////////////////
+//   // wird von delete(void* p) aufgerufen
+//   void LocalDelete( void* p ) ;
 
-   void ShowAllocList();
-}
+//   void ShowAllocList();
+//}
 
 
 using std::string;
@@ -87,7 +87,7 @@ namespace demo {
    };
 
    class tDemoClass3Checked  {
-      static void* operator new( size_t size, tLfm const& lfm );
+      static void* operator new( size_t size, t_lfm const& lfm );
       static void operator delete( void* );
       tDemoClass3Checked( const std::string& txt ): v( txt )  {      }
    public:
@@ -96,7 +96,7 @@ namespace demo {
    };
 
    struct tDemoClass2Checked  {
-      static void* operator new( size_t size, tLfm const& lfm );
+      static void* operator new( size_t size, t_lfm const& lfm );
       static void operator delete( void* );
       tDemoClass2Checked(): var1(), var2(), var3() {}
    public:
@@ -107,7 +107,7 @@ namespace demo {
    };
 
    class tDemoClass1Checked {
-      static void* operator new( size_t, tLfm const& lfm );
+      static void* operator new( size_t, t_lfm const& lfm );
       static void operator delete( void* );
       tDemoClass1Checked(): value()  {}
    public:

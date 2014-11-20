@@ -66,7 +66,7 @@ namespace rlf_tlog {
       }
 
 
-      bool file_exists( std::string const& fn ) {
+      bool file_exists( string const& fn ) {
          boost::filesystem::path p( fn );
          return file_exists( p );
       }
@@ -114,7 +114,8 @@ namespace rlf_tlog {
          size_t i = file.rfind( pathSlash );
 
          if( i  != string::npos ) {
-            return file.substr( 0, i + 1 );
+            string temp = file.substr( 0, i + 1 );
+            return temp;
          }
 
          string temp = working_directory();
@@ -125,7 +126,8 @@ namespace rlf_tlog {
          size_t i = file.rfind( slash );
 
          if( i  != string::npos ) {
-            return file.substr( i + 1 );
+            string temp = file.substr( i + 1 );
+            return temp;
          }
 
          return file;
@@ -170,11 +172,11 @@ namespace rlf_tlog {
          o << ' ';
 
          if( method.size() > 0 ) {
-            o << std::setfill( ' ' ) << std::left << std::setw( 40 );
+            o << std::setfill( ' ' ) << std::left << std::setw( 20 );
             string m = method;
 
-            if( m.size() > 40 ) {
-               m  = m.substr( 0, 40 );
+            if( m.size() > 20 ) {
+               m  = m.substr( 0, 20 );
             }
 
             o << m;
@@ -229,6 +231,7 @@ namespace rlf_tlog {
       tCat _D = tCat( eCategory::Cat_D, "d" );
       tCat _tif = tCat( eCategory::Cat_Tiff, "tif" );
 
+
       tLev _DEBUG_ = tLev( eLevel::LDEBUG, "DEBUG" );
       tLev _INFO  = tLev( eLevel::INFO, "INFO " );
       tLev _WARN  = tLev( eLevel::WARN, "WARN " );
@@ -238,11 +241,11 @@ namespace rlf_tlog {
    }
 
    tCat cats[8] = { _def, _rimg, _A, _B, _C, _D, _tif };
-	 std::vector<tCat> tLogImpl::_cats(cats,cats + 8);
-	 tLev levs[6] = { _DEBUG_, _INFO, _WARN, _ERROR_, _FATAL, _NONE };
-	 std::vector<tLev> tLogImpl::_levs( levs, levs + 6 );
+   std::vector<tCat> tLogImpl::_cats( cats, cats + 8 );
+   tLev levs[6] = { _DEBUG_, _INFO, _WARN, _ERROR_, _FATAL, _NONE };
+   std::vector<tLev> tLogImpl::_levs( levs, levs + 6 );
 
-   std::string tLogImpl::to_string( eLevel lev_ )const {
+   string tLogImpl::to_string( eLevel lev_ )const {
       std::vector<tLev>::const_iterator f = find( _levs.begin(), _levs.end(), lev_ );
 
       if( f != _levs.end() ) {
@@ -252,7 +255,7 @@ namespace rlf_tlog {
       return string();
    }
 
-   std::string tLogImpl::to_string( eCategory cat_ )const {
+   string tLogImpl::to_string( eCategory cat_ )const {
       std::vector<tCat>::const_iterator f = find( _cats.begin(), _cats.end(), cat_ );
 
       if( f != _cats.end() ) {
@@ -285,8 +288,8 @@ namespace rlf_tlog {
       fp << " " << ls  << " ";
 
       size_t line = lfmcl.line();
-      std::string cppfile = lfmcl.file();
-      std::string method = lfmcl.method();
+      string cppfile = lfmcl.file();
+      string method = lfmcl.method();
 
       // append __LINE,__FILE__,__FUCTION__ to line
       lfm_InfoToStream( fp, line, cppfile, method );

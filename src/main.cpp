@@ -21,9 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <iostream>
+#include <boost/lexical_cast.hpp>
+
 
 #include "tLog.h"
 #include "tLog_Category_default.h"
+#include "tLog_Category_A.h"
+#include "tLfm.h"
+#include "alloccheck.h"
+
+using rlf_tlfm::t_lfm;
+
 #include "impl.h"
 
 using namespace std;
@@ -53,6 +61,7 @@ impl.cpp
 
 
 */
+
 
 
 int main() {
@@ -97,6 +106,6 @@ int main() {
       LOGT_INFO( string( "Ex rt: " ) + rt.what() );
    }
 
-   alloccheck::ShowAllocList();
+   LOGT_INFO( alloccheck::alloc_list_message() );
    return 0;
 }

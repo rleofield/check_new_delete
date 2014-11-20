@@ -46,8 +46,8 @@ namespace rlf_tlog {
       static std::vector<tLev> _levs;
    public:
       tLogImpl():
-         _file()
-      {}
+         _file() {
+      }
 
       // is mutable, to use logging in const environments
       mutable std::string  _file;

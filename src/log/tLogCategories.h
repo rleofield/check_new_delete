@@ -32,7 +32,7 @@
 
 #include "tLogEnum.h"
 
-using std::string;
+//using std::string;
 
 namespace rlf_tlog {
 
@@ -43,10 +43,10 @@ namespace rlf_tlog {
 
    class tLev {
       eLevel _lev;
-      string _name;
+      std::string _name;
    public:
       tLev(): _lev( eLevel::NONE ), _name() {}
-      tLev( eLevel a, string n ): _lev( a ), _name( n ) {}
+      tLev( eLevel a, std::string n ): _lev( a ), _name( n ) {}
       ~tLev() {}
       operator eLevel()const {
          return _lev;
@@ -62,7 +62,7 @@ namespace rlf_tlog {
 
          return false;
       }
-      string name()const {
+      std::string name()const {
          return _name;
       }
    };
@@ -73,11 +73,11 @@ namespace rlf_tlog {
    */
    class tCat {
       eCategory _cat;
-      string _name;
+      std::string _name;
       tLev _cat_level;
    public:
       tCat(): _cat( eCategory::_default ), _name(), _cat_level() {}
-      tCat( eCategory a, string n ): _cat( a ), _name( n ), _cat_level() {
+      tCat( eCategory a, std::string n ): _cat( a ), _name( n ), _cat_level() {
 
       }
       ~tCat() {}
@@ -95,7 +95,7 @@ namespace rlf_tlog {
 
          return false;
       }
-      string name()const {
+      std::string name()const {
          return _name;
       }
       void cat_level( tLev  l ) {

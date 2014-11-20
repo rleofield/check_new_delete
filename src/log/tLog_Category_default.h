@@ -57,11 +57,11 @@ using namespace rlf_tlog;
 #define LOGT_ERROR(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LERROR, (exp)  )))
 #define LOGT_FATAL(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::FATAL, (exp) )))
 
-//#define LOGT_COUT_DEBUG(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LDEBUG, exp ) ) , std::cout << (exp) << std::endl  )
-//#define LOGT_COUT_INFO(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::INFO, (exp)  )) , std::cout << (exp) << std::endl )
-//#define LOGT_COUT_WARN(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::WARN, (exp) )) , std::cout << (exp) << std::endl )
-//#define LOGT_COUT_ERROR(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LERROR, (exp)  )) , std::cout << (exp) << std::endl )
-//#define LOGT_COUT_FATAL(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::FATAL, (exp) )) , std::cout << (exp) << std::endl )
+#define LOGT_COUT_DEBUG(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LDEBUG, exp ) ) , std::cout << (exp) << std::endl  )
+#define LOGT_COUT_INFO(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::INFO, (exp)  )) , std::cout << (exp) << std::endl )
+#define LOGT_COUT_WARN(exp)   (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::WARN, (exp) )) , std::cout << (exp) << std::endl )
+#define LOGT_COUT_ERROR(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::LERROR, (exp)  )) , std::cout << (exp) << std::endl )
+#define LOGT_COUT_FATAL(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::_default, eLevel::FATAL, (exp) )) , std::cout << (exp) << std::endl )
 
 #else
 #define LOGT_DEBUG(exp)   (noLogFunc())

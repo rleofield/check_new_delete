@@ -53,7 +53,7 @@ using namespace rlf_tlog;
 #define LOGT_A_FATAL(exp)  (logger().log( LfmCL(__LINE__,__FILE__,__FUNCTION__, eCategory::Cat_A, eLevel::FATAL, (exp) )))
 #else
 #define LOGT_A_DEBUG(exp)   {}
-#define LOGT_A_INFO(exp)    {}
+#define LOGT_INFO(exp)    {}
 #define LOGT_A_WARN(exp)    {}
 #define LOGT_A_ERROR(exp)   {}
 #define LOGT_A_FATAL(exp)   {}

@@ -49,8 +49,8 @@ namespace rlf_tlog {
       tLfmCL(): _line( 0 ), _file(), _method(), _cat( eCategory::_default ), _level( eLevel::NONE ), _txt() {}
 
       tLfmCL( uint32_t line_, std::string const& file_, std::string const& method_, eCategory cat, eLevel level_, std::string txt_ )
-         : _line( line_ ), _file( file_ ), _method( method_ ) , _cat( cat ), _level( level_ ), _txt( txt_ )
-      {}
+         : _line( line_ ), _file( file_ ), _method( method_ ) , _cat( cat ), _level( level_ ), _txt( txt_ ) {
+      }
       size_t line()const {
          return _line;
       }

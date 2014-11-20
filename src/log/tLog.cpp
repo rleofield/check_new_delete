@@ -23,6 +23,9 @@
 #include <fstream>
 #include <iostream>
 
+
+#include "tLfm.h"
+
 #include "tLog.h"
 #include "tLogImpl.h"
 
@@ -90,6 +93,19 @@ namespace rlf_tlog {
    tLog const& logger() {
       static tLog loggerInstance;
       return  loggerInstance;
+   }
+
+}
+
+namespace rlf_tlfm {
+   // implemented here, no other place found
+   t_lfm tlog_lfm( uint32_t line_, std::string const& file_, std::string const& method_ ) {
+      return t_lfm( line_, file_, method_ );
+   }
+
+
+   t_lfm::operator std::string()const {
+      return "File: " + file() + ", Line: " + std::to_string( line() ) + ",Method: " + method();
    }
 
 }

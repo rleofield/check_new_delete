@@ -25,12 +25,13 @@
 #include <string.h>
 #include <new>
 
+#include "alloccheck.h"
 
 #include "impl.h"
 
 #include "tLog.h"
-
 #include "tLog_Category_default.h"
+
 
 using namespace rlf_tlog;
 using std::string;
@@ -38,12 +39,6 @@ using rlf_tlog::eCategory;
 using rlf_tlog::eLevel;
 
 
-#ifdef _WIN32
-#pragma warning( disable : 4291 ) // Warning   30 warning C4291: 'void *txml::XmlComment::operator new(size_t,const nsl::tLfm &)' : no matching operator delete found; memory will not be freed if initialization throws an exception   c:\raprojekte\snippets\xmldemo\demo.cpp   218
-#pragma warning( disable : 4800 ) // Warning   7  warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)   c:\raprojekte\snippets\xmldemo\mxml_base.h   57
-#pragma warning( disable : 4996 ) // Warning   1  warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.   c:\raprojekte\snippets\xmldemo\stringhelper.cpp 360
-#pragma warning( disable : 4804 ) // Warning   12 warning C4804: '>' : unsafe use of type 'bool' in operation c:\raprojekte\snippets\xmldemo\mxml_document.cpp   407
-#endif
 
 using std::pair;
 
@@ -65,37 +60,37 @@ namespace demo {
    }
 
 
-   void* tDemoClass2Checked::operator new( size_t size, tLfm const& lfm ) {
-      return alloccheck::LocalAlloc( size, lfm );
+   void* tDemoClass2Checked::operator new( size_t size, t_lfm const& lfm ) {
+      return alloccheck::checked_alloc( size, lfm );
    }
 
    void tDemoClass2Checked::operator delete( void* p ) {
-      alloccheck::LocalDelete( p );
+      alloccheck::checked_delete( p );
    }
    tDemoClass2Checked* tDemoClass2Checked::Create( const std::string& ) {
-      return new( lfm_ ) tDemoClass2Checked();
+      return new( tlog_lfm_ ) tDemoClass2Checked();
    }
 
 
-   void* tDemoClass1Checked::operator new( size_t size, tLfm const& lfm ) {
-      return alloccheck::LocalAlloc( size, lfm );
+   void* tDemoClass1Checked::operator new( size_t size, t_lfm const& lfm ) {
+      return alloccheck::checked_alloc( size, lfm );
    }
    void tDemoClass1Checked::operator delete( void* p ) {
-      alloccheck::LocalDelete( p );
+      alloccheck::checked_delete( p );
    }
    tDemoClass1Checked* tDemoClass1Checked::Create( const std::string& ) {
-      return new( lfm_ ) tDemoClass1Checked();
+      return new( tlog_lfm_ ) tDemoClass1Checked();
    }
 
 
-   void* tDemoClass3Checked::operator new( size_t size, tLfm const& lfm ) {
-      return alloccheck::LocalAlloc( size, lfm );
+   void* tDemoClass3Checked::operator new( size_t size, t_lfm const& lfm ) {
+      return alloccheck::checked_alloc( size, lfm );
    }
    void tDemoClass3Checked::operator delete( void* p ) {
-      alloccheck::LocalDelete( p );
+      alloccheck::checked_delete( p );
    }
    tDemoClass3Checked* tDemoClass3Checked::Create( string const& txt ) {
-      return new( lfm_ ) tDemoClass3Checked( txt );
+      return new( tlog_lfm_ ) tDemoClass3Checked( txt );
    }
 
 
@@ -104,267 +99,6 @@ namespace demo {
 
 
 }
-
-
-/**
-     Überladung von new mit Markern:
-     Jeder Aufruf von new/delete wird protokolliert.
-     Im allozierten Speicher wird am bein Aufruf von new() eine Struktur eingefügt,
-     die bei delete geprüft wird.
-     Alle new/delete werden in einer STL-Map abglegt.
-     Am Programmende wird die Map ausgegeben.
-     Wenn es zu jedem new ein delete gibt, ist die Map am Programmende leer.
-     */
-namespace alloccheck {
-   string clip_at_pos( string const& s, size_t pos ) {
-      if( s.size() > 0 ) {
-         size_t i = pos;
-
-         if( i != string::npos ) {
-            return s.substr( 0, i ) ;
-         }
-      }
-
-      return s;
-   }
-
-
-   tAllocCheckControlMap& alloccheckInstance() {
-      static tAllocCheckControlMap _alloccheckInstance;
-      return  _alloccheckInstance;
-   }
-
-   const char pathSlash = '\\';
-
-   string getFilennameFromPath( string const&  path_file ) {
-      size_t i = path_file.rfind( pathSlash );
-
-      if( i  != string::npos ) {
-         return path_file.substr( i );
-      }
-
-      return path_file;
-   }
-
-   // Hilfsstruktur 'AllocHeader', um Informationen abzulegen, die im delete ausgewertet werden
-
-   const size_t maxalloc = 32;      // Platz für Filename, Klassenname, Methodenname im Header'
-   const size_t maxallocinfo = 128; // Platz ur die Loghging-Informatiom im Header'
-   struct AllocHeader {             // Header, der jedem Speicherbereich vorangestellt wird
-      char file[maxalloc];       // filename
-      char info[maxallocinfo];   // logging Information
-      char _class[maxalloc];     // Name der Klasse, für die new() aufgerufen wurde
-      char function[maxalloc];   // Name der Function, in der new() aufgerufen wurde
-      size_t size;               // Grösse des allozierten Speichers
-      size_t line;               // Zeiel, in der new() aufgerufen wurde
-      size_t magic;              // magic number, am Ende des speichers, Test für Buffer Overflow
-			void set();
-   };
-			void AllocHeader::set(){
-				memset(&size, 7, sizeof(size_t));
-				memset(&line, 7, sizeof(size_t));
-				memset(&magic, 7, sizeof(size_t));
-				memset( file, 7, maxalloc);
-				memset( info, 7, maxallocinfo);
-				memset( _class, 7, maxalloc);
-				memset( function, 7, maxalloc);
-			}
-
-
-   // statischer Marker im Logfile,
-   //   damit können mit grep die wichtigen Logzeilen gefiltert werden
-   string grepMarker = "alloctest";
-
-   //////////////////////////////////////////////////////////////////////////////////////
-   // wird von new() aufgerufen, protokolliert Zeile, Name der Methode, Name der Klasse
-   void* LocalAlloc( size_t size, tLfm const& lfm )  {
-
-      // es wird Speicher mit new() angefordert, + sizeof(AllocHeader) + Platz für eine magic Number am Ende
-      //char* p = ::new( nothrow ) char[sizeof( AllocHeader ) + size + sizeof( size_t )];
-      char* p_ = ::new char[sizeof( AllocHeader ) + size + sizeof( size_t )];
-
-      if( NULL == p_ ) {
-         throw "allocation fails : no free memory";
-      }
-
-      char* p_start = p_ + sizeof( AllocHeader );
-      char* p_magicend = p_ + sizeof( AllocHeader ) + size;
-
-      size_t line = lfm.line();
-      string file = lfm.file();
-      string method = lfm.method();
-
-      // strip path from file
-      size_t i = file.rfind( pathSlash );
-
-      if( i  != string::npos ) {
-         file = file.substr( i );
-      }
-
-      file = getFilennameFromPath( file );
-
-      // clip file, method and class names
-      file = clip_at_pos( file, maxalloc - 1 );
-      method = clip_at_pos( method, maxalloc - 1 );
-
-      AllocHeader* pHeader = ( AllocHeader* )p_;
-			pHeader->set();
-
-      if( file.size() > maxalloc - 1 ) {
-         file = file.substr( 0, maxalloc - 1 );
-      }
-
-      tAllocCheckControlMap& check = alloccheckInstance();
-
-      // build info message for logging
-      string info =   "size: " + strings::toString( static_cast<int>( size ) )
-                      + ", total: " + strings::toString( check.totalalloc )
-                      + ", file: " +  file
-                      + ", method: " +  method
-                      + ", line: " + strings::toString( static_cast<int>( line ) );
-
-      if( info.length() > maxallocinfo - 1 ) {
-         info = info.substr( 0, maxallocinfo - 1 );
-      }
-
-      pHeader->size = size;
-      pHeader->line = line;
-      pHeader->magic = 5555; //rand();
-
-      pHeader->file[0] = 0;
-      pHeader->info[0] = 0;
-
-      ::strncat( pHeader->file, file.c_str(), file.size() );
-      ::strncat( pHeader->info, info.c_str(), info.size() );
-
-      *( ( size_t* )p_magicend ) = pHeader->magic;
-
-
-      size_t key = ( size_t )pHeader;
-      {
-         //  u.U. Sperre, wenn mehrere Threads vorhanden sind
-         check.alloccount++;
-         check.totalalloc += static_cast<int>( size );
-         tAllocMap& allocList = check.getMutableAlloclist();
-         allocIterator it = allocList.find( key );
-
-         if( it != allocList.end() ) {
-            string ll = grepMarker
-                        + " key in der map vorhanden, fatal  "
-                        + strings::toString( static_cast<int>( key ) )
-                        + ", info: " + info + "'";
-            LOGT_INFO( ll );
-            exit( 0 );
-         }
-
-         allocList[key] = info;
-      }
-      string logLine = grepMarker + " Alloc count:  " + strings::toString( static_cast<int>( check.alloccount ) ) + ", info: " + info;
-      LOGT_INFO( logLine );
-      return ( void* )( p_start );
-   }
-
-   ////////////////////////////////////////////////////////////////////////////////////////////
-   // wird von delete() aufgerufen
-   void LocalDelete( void* p )  {
-
-      //alloccheck_log::tLog const& logger_ = alloccheck_log::logger();
-      // berechne den eigentlichen Beginn des allozierten Speichers
-      char* p_start = ( ( char* )p - sizeof( AllocHeader ) );
-			std::vector<char> v(p_start, p_start+ sizeof(AllocHeader) );
-
-      AllocHeader* pHeader = ( AllocHeader* )( p_start );
-      // wenn ein Bufferoverflow auftrat, sind diese Stellen nicht mehr 0, d.h. hier auf 0 setzen
-			//		damit man die strings kopieren kann
-      //pHeader->file[maxalloc - 1] = 0;
-      //pHeader->info[maxallocinfo - 1] = 0;
-      //pHeader->_class[maxalloc - 1] = 0;
-
-      string file = pHeader->file;
-      string info = pHeader->info;
-      //size_t line = pHeader->line;
-      size_t size = pHeader->size;
-      size_t magic = pHeader->magic;
-
-      char* p_magicend = ( char* )p + size;
-      size_t magic_at_end = *( ( size_t* )p_magicend );
-
-      if( magic != magic_at_end ) {
-         LOGT_INFO( grepMarker + " buffer overflow at: " + string( info ) );
-         exit( 0 );
-      }
-
-      size_t key = ( size_t )pHeader;
-
-      tAllocCheckControlMap& check = alloccheckInstance();
-
-      int lastalloccount = 0;
-      {
-         //nsl::tLock l(m);
-         tAllocMap& allocList = check.getMutableAlloclist();
-         allocIterator it = allocList.find( key );
-         lastalloccount = static_cast<int>( allocList.size() );
-         check.alloccount--;
-
-         if( it != allocList.end() ) {
-            allocList.erase( key );
-         } else {
-            LOGT_INFO( grepMarker + " Delete nicht in map gefunden: " + string( info ) );
-            exit( 0 );
-         }
-
-         check.totalalloc -= static_cast<int>( size );
-      }
-
-      string infolog = grepMarker
-                       + " Delete: count: "
-                       + strings::toString( ( int )check.alloccount )
-                       + ", mem left: "
-                       + strings::toString( check.totalalloc )
-                       + ", info: '" + info + "'";
-      LOGT_INFO( infolog );
-
-      // final delete of allocated memory
-      delete []( p_start );
-
-      tAllocMap const& allocList2 = check.getAlloclist();
-
-      if( check.alloccount != static_cast<int>( allocList2.size() ) ) {
-         int diff = check.alloccount - lastalloccount;
-         LOGT_INFO( grepMarker + " Error in 'delete': missingcount: " + strings::toString( diff ) );
-      }
-
-      // ok
-
-   }
-
-   void ShowAllocList() {
-      alloccheck::tAllocMap const& allocList = alloccheck::alloccheckInstance().getAlloclist();
-
-      if( allocList.size() > 0 ) {
-         LOGT_INFO( " not deleted pointers: " + strings::toString( static_cast<int>( allocList.size() ) ) );
-         alloccheck::allocIterator itstart = allocList.begin();
-         alloccheck::allocIterator itend = allocList.end();
-
-         while( itstart != itend ) {
-            pair<size_t, string> pa = *itstart;
-            string info = pa.second;
-            LOGT_INFO( info );
-            ++itstart;
-         }
-      }
-
-      LOGT_INFO( " end of program, number of not deleted pointers: " + strings::toString( static_cast<int>( allocList.size() ) ) );
-
-   }
-
-
-}
-
-
-
-
-/////////////////////////////////////////////////////////////////////
 
 
 
