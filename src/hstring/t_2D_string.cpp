@@ -1,7 +1,6 @@
 /* --------------------------------------------------------------------------
-    Copyright 2013 by Richard Albrecht
+    Copyright 2012 by Richard Albrecht
     richard.albrecht@rleofield.de
-    www.rleofield.de
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -19,43 +18,35 @@
 */
 
 
-#ifndef RLF_ALLOC_CHECK_H
-#define RLF_ALLOC_CHECK_H
 
-#include <stdlib.h>
-#include <map>
-
-#include "tLfm.h"
-using rlf_tlfm::t_lfm;
+#include "t_2D_string.h"
 
 
-namespace alloccheck {
+using namespace std;
 
-   // set to false, to switch off all checked new/delete
-   const bool use_alloc_check = true;
+using rlf_minit::float_xy;
+using rlf_minit::double_xy;
+using rlf_minit::uint32_xy;
+using rlf_minit::int32_xy;
+
+namespace rlf_hstring {
+
+   std::string toString( uint32_xy p ) {
+      return "(" + toString( p.x() ) + "," + toString( p.y() ) + ")";
+   }
+   std::string toString( double_xy const& p ) {
+      size_t w = 6;
+      size_t prec = 2;
+      return "(" + toString( p.x(), w, prec ) + "," + toString( p.y(), w, prec ) + ")";
+   }
+   std::string toString( float_xy const& p ) {
+      size_t w = 6;
+      size_t prec = 2;
+      return "(" + toString( p.x(), w, prec ) + "," + toString( p.y(), w, prec ) + ")";
+   }
 
 
-   // get the count of not deleted unchecked pointers, must be zero
-   std::string alloc_list_message();
-   size_t alloc_list_size();
 
-   // gets a list of all undeleted checked pointers
-   std::string allocliststring();
-
-
-
-   // called by new(), logs linenumber, methodname, classname as magic info information in allocated memory
-   void* checked_alloc( size_t size, rlf_tlfm::t_lfm const& lfmcIn );
-
-   // calles by delete(void* p), checks, if logging info is present
-   void checked_delete( void* p ) ;
-
-
-} // end of ns alloccheck
-
-
-#endif //
+} // end ns rlf_hstring
 
 //EOF
-
-

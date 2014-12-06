@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = 
 CFLAGS        = -pipe -g -Wall -W -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -gdwarf-3 -g -O0 -std=c++0x -Wparentheses -Wreturn-type -Wshadow -Wextra -Wno-unused -Wno-unused-variable -Weffc++ -Wall -W -fPIE $(DEFINES)
-INCPATH       = -I../../../Qt5.3.0/5.3/gcc_64/mkspecs/linux-g++ -I. -Isrc -Isrc/log -Isrc/boost
+INCPATH       = -I../../../Qt5.3.0/5.3/gcc_64/mkspecs/linux-g++ -I. -Isrc -Isrc/log -Isrc/hstring
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/richard/Qt5.3.0/5.3/gcc_64
 LIBS          = $(SUBLIBS) -lboost_thread -lboost_system -lboost_filesystem 
@@ -49,12 +49,16 @@ SOURCES       = src/main.cpp \
 		src/impl.cpp \
 		src/log/tLogImpl.cpp \
 		src/log/tLog.cpp \
-		src/log/alloccheck.cpp 
+		src/log/alloccheck.cpp \
+		src/hstring/stringhelper.cpp \
+		src/hstring/gettokens.cpp 
 OBJECTS       = .tmp/main.o \
 		.tmp/impl.o \
 		.tmp/tLogImpl.o \
 		.tmp/tLog.o \
-		.tmp/alloccheck.o
+		.tmp/alloccheck.o \
+		.tmp/stringhelper.o \
+		.tmp/gettokens.o
 DIST          = ../../../Qt5.3.0/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.3.0/5.3/gcc_64/mkspecs/common/shell-unix.conf \
 		../../../Qt5.3.0/5.3/gcc_64/mkspecs/common/unix.conf \
@@ -160,7 +164,9 @@ DIST          = ../../../Qt5.3.0/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		src/impl.cpp \
 		src/log/tLogImpl.cpp \
 		src/log/tLog.cpp \
-		src/log/alloccheck.cpp
+		src/log/alloccheck.cpp \
+		src/hstring/stringhelper.cpp \
+		src/hstring/gettokens.cpp
 QMAKE_TARGET  = check_new_delete
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = check_new_delete
@@ -466,7 +472,8 @@ compiler_clean:
 		src/log/tLogCategories.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/tLog.o src/log/tLog.cpp
 
-.tmp/alloccheck.o: src/log/alloccheck.cpp src/log/tLog_Category_A.h \
+.tmp/alloccheck.o: src/log/alloccheck.cpp src/hstring/stringhelper.h \
+		src/log/tLog_Category_A.h \
 		src/log/tLog.h \
 		src/log/tLfmCL.h \
 		src/log/tLogEnum.h \
@@ -474,6 +481,14 @@ compiler_clean:
 		src/log/tLfm.h \
 		src/log/alloccheck.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/alloccheck.o src/log/alloccheck.cpp
+
+.tmp/stringhelper.o: src/hstring/stringhelper.cpp src/hstring/stringhelper.h \
+		src/hstring/gettokens.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/stringhelper.o src/hstring/stringhelper.cpp
+
+.tmp/gettokens.o: src/hstring/gettokens.cpp src/hstring/gettokens.h \
+		src/hstring/stringhelper.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/gettokens.o src/hstring/gettokens.cpp
 
 ####### Install
 

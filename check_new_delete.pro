@@ -42,7 +42,7 @@ message("qmake check_new_delete")
 
 INCLUDEPATH += $$PWD/src
 INCLUDEPATH += $$PWD/src/log
-INCLUDEPATH += $$PWD/src/boost
+INCLUDEPATH += $$PWD/src/hstring
 
 
 SOURCES += \
@@ -50,7 +50,9 @@ SOURCES += \
     src/impl.cpp \
     src/log/tLogImpl.cpp \
     src/log/tLog.cpp \
-    src/log/alloccheck.cpp
+    src/log/alloccheck.cpp \
+    src/hstring/stringhelper.cpp \
+    src/hstring/gettokens.cpp
 
 HEADERS += \
     src/impl.h \
@@ -61,7 +63,10 @@ HEADERS += \
     src/log/tLog_Category_default.h \
     src/log/tLfm.h \
     src/log/tLfmCL.h \
-    src/log/alloccheck.h
+    src/log/alloccheck.h \
+    src/hstring/stringhelper.h \
+    src/hstring/gettokens.h \
+    src/log/tLog_Category_A.h
 
 
 LIBS= -lboost_thread

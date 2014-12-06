@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-    Copyright 2013 by Richard Albrecht
+    Copyright 2012 by Richard Albrecht
     richard.albrecht@rleofield.de
     www.rleofield.de
 
@@ -19,43 +19,32 @@
 */
 
 
-#ifndef RLF_ALLOC_CHECK_H
-#define RLF_ALLOC_CHECK_H
+#ifndef GETTOKENS_H
+#define GETTOKENS_H
 
-#include <stdlib.h>
-#include <map>
-
-#include "tLfm.h"
-using rlf_tlfm::t_lfm;
+#include <string>
+#include <vector>
 
 
-namespace alloccheck {
+namespace rlf_hstring {
 
-   // set to false, to switch off all checked new/delete
-   const bool use_alloc_check = true;
+   class tTokens {
+      std::vector<std::string> _buffer;
+      tTokens( tTokens const& );
+      void operator=( tTokens const& );
+   public:
+      tTokens( const std::string& str, std::string const& delims = " " );
+      ~tTokens() {}
+      std::vector<std::string> operator()()const {
+         return _buffer;
+      }
 
+   };
 
-   // get the count of not deleted unchecked pointers, must be zero
-   std::string alloc_list_message();
-   size_t alloc_list_size();
-
-   // gets a list of all undeleted checked pointers
-   std::string allocliststring();
-
-
-
-   // called by new(), logs linenumber, methodname, classname as magic info information in allocated memory
-   void* checked_alloc( size_t size, rlf_tlfm::t_lfm const& lfmcIn );
-
-   // calles by delete(void* p), checks, if logging info is present
-   void checked_delete( void* p ) ;
+} // end ns rlf_hstring
 
 
-} // end of ns alloccheck
 
 
-#endif //
-
-//EOF
-
+#endif // GETTOKENS_H
 
