@@ -455,13 +455,15 @@ compiler_clean:
 		src/log/tLog.h \
 		src/log/tLfmCL.h \
 		src/log/tLogEnum.h \
-		src/log/tLog_Category_default.h
+		src/log/tLog_Category_default.h \
+		src/log/win32.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/impl.o src/impl.cpp
 
 .tmp/tLogImpl.o: src/log/tLogImpl.cpp src/log/tLogImpl.h \
 		src/log/tLfmCL.h \
 		src/log/tLogEnum.h \
-		src/log/tLogCategories.h
+		src/log/tLogCategories.h \
+		src/log/win32.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/tLogImpl.o src/log/tLogImpl.cpp
 
 .tmp/tLog.o: src/log/tLog.cpp src/log/tLfm.h \
@@ -473,13 +475,11 @@ compiler_clean:
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/tLog.o src/log/tLog.cpp
 
 .tmp/alloccheck.o: src/log/alloccheck.cpp src/hstring/stringhelper.h \
-		src/log/tLog_Category_A.h \
 		src/log/tLog.h \
 		src/log/tLfmCL.h \
 		src/log/tLogEnum.h \
-		src/log/tLogCategories.h \
-		src/log/tLfm.h \
-		src/log/alloccheck.h
+		src/log/alloccheck.h \
+		src/log/tLfm.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o .tmp/alloccheck.o src/log/alloccheck.cpp
 
 .tmp/stringhelper.o: src/hstring/stringhelper.cpp src/hstring/stringhelper.h \

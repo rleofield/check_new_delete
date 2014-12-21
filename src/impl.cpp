@@ -32,7 +32,7 @@
 #include "tLog.h"
 #include "tLog_Category_default.h"
 
-
+#include "win32.h"
 
 using namespace rlf_tlog;
 using std::string;
@@ -56,42 +56,42 @@ namespace demo {
 
 
 
-   tDemoClassNotChecked* tDemoClassNotChecked::Create( const std::string& ) {
-      return new tDemoClassNotChecked();
+   tNotChecked* tNotChecked::Create( const std::string& ) {
+      return new tNotChecked();
    }
 
 
-   void* tDemoClass2Checked::operator new( size_t size, t_lfm const& lfm ) {
+   void* tChecked2::operator new( size_t size, t_lfm const& lfm ) {
       return alloccheck::checked_alloc( size, lfm );
    }
 
-   void tDemoClass2Checked::operator delete( void* p ) {
+   void tChecked2::operator delete( void* p ) {
       alloccheck::checked_delete( p );
    }
-   tDemoClass2Checked* tDemoClass2Checked::Create( const std::string& ) {
-      return new( tlog_lfm_ ) tDemoClass2Checked();
+   tChecked2* tChecked2::Create( const std::string& ) {
+      return new( tlfm_ ) tChecked2();
    }
 
 
-   void* tDemoClass1Checked::operator new( size_t size, t_lfm const& lfm ) {
+   void* tChecked1::operator new( size_t size, t_lfm const& lfm ) {
       return alloccheck::checked_alloc( size, lfm );
    }
-   void tDemoClass1Checked::operator delete( void* p ) {
+   void tChecked1::operator delete( void* p ) {
       alloccheck::checked_delete( p );
    }
-   tDemoClass1Checked* tDemoClass1Checked::Create( const std::string& ) {
-      return new( tlog_lfm_ ) tDemoClass1Checked();
+   tChecked1* tChecked1::Create( const std::string& ) {
+      return new( tlfm_ ) tChecked1();
    }
 
 
-   void* tDemoClass3Checked::operator new( size_t size, t_lfm const& lfm ) {
+   void* tChecked3::operator new( size_t size, t_lfm const& lfm ) {
       return alloccheck::checked_alloc( size, lfm );
    }
-   void tDemoClass3Checked::operator delete( void* p ) {
+   void tChecked3::operator delete( void* p ) {
       alloccheck::checked_delete( p );
    }
-   tDemoClass3Checked* tDemoClass3Checked::Create( string const& txt ) {
-      return new( tlog_lfm_ ) tDemoClass3Checked( txt );
+   tChecked3* tChecked3::Create( string const& txt ) {
+      return new( tlfm_ ) tChecked3( txt );
    }
 
 

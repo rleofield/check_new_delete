@@ -40,7 +40,8 @@ namespace rlf_tlog {
       Cat_B,
       Cat_C,
       Cat_D,
-      Cat_Tiff
+      Cat_Tiff,
+      Cat_Alloc
    };
 
 

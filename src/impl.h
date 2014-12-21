@@ -86,40 +86,40 @@ namespace demo {
       virtual ~tException() throw() {}
    };
 
-   class tDemoClass3Checked  {
+   class tChecked3  {
       static void* operator new( size_t size, t_lfm const& lfm );
       static void operator delete( void* );
-      tDemoClass3Checked( const std::string& txt ): v( txt )  {      }
+      tChecked3( const std::string& txt ): v( txt )  {      }
    public:
       std::string v ;
-      static tDemoClass3Checked* Create( const std::string& txt );
+      static tChecked3* Create( const std::string& txt );
    };
 
-   struct tDemoClass2Checked  {
+   struct tChecked2  {
       static void* operator new( size_t size, t_lfm const& lfm );
       static void operator delete( void* );
-      tDemoClass2Checked(): var1(), var2(), var3() {}
+      tChecked2(): var1(), var2(), var3() {}
    public:
       std::string var1;
       std::string var2;
       std::string var3;
-      static tDemoClass2Checked* Create( const std::string& txt );
+      static tChecked2* Create( const std::string& txt );
    };
 
-   class tDemoClass1Checked {
+   class tChecked1 {
       static void* operator new( size_t, t_lfm const& lfm );
       static void operator delete( void* );
-      tDemoClass1Checked(): value()  {}
+      tChecked1(): value()  {}
    public:
       string value;
-      static tDemoClass1Checked* Create( const std::string& txt );
+      static tChecked1* Create( const std::string& txt );
    };
 
-   class tDemoClassNotChecked {
-      tDemoClassNotChecked() : value()   { }
+   class tNotChecked {
+      tNotChecked() : value()   { }
    public:
       std::string value;
-      static tDemoClassNotChecked* Create( const std::string& txt );
+      static tNotChecked* Create( const std::string& txt );
    };
 
 } // end of namespace

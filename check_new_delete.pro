@@ -65,7 +65,6 @@ HEADERS += \
     src/log/tLfmCL.h \
     src/log/alloccheck.h \
     src/hstring/stringhelper.h \
-    src/hstring/gettokens.h \
     src/log/tLog_Category_A.h
 
 

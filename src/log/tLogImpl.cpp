@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "tLogImpl.h"
 
-
+#include "win32.h"
 
 
 
@@ -155,6 +155,7 @@ namespace rlf_tlog {
 
       const size_t fieldLognumber = 5;
       const size_t fieldFilename = 20;
+      const size_t fieldMethodname = 20;
 
       // writes __LINE,__FILE__ to log stream
       void lfm_InfoToStream( std::ofstream& o, size_t line, const string&  cppfile, string const& method = "" ) {
@@ -179,8 +180,8 @@ namespace rlf_tlog {
             o << std::setfill( ' ' ) << std::left << std::setw( 20 );
             string m = method;
 
-            if( m.size() > 20 ) {
-               m  = m.substr( 0, 20 );
+            if( m.size() > fieldMethodname ) {
+               m  = m.substr( 0, fieldMethodname );
             }
 
             o << m;
@@ -234,6 +235,7 @@ namespace rlf_tlog {
       tCat _C = tCat( eCategory::Cat_C, "c" );
       tCat _D = tCat( eCategory::Cat_D, "d" );
       tCat _tif = tCat( eCategory::Cat_Tiff, "tif" );
+      tCat _alloc = tCat( eCategory::Cat_Alloc, "alloc" );
 
 
       tLev _DEBUG_ = tLev( eLevel::LDEBUG, "DEBUG" );
@@ -244,12 +246,13 @@ namespace rlf_tlog {
       tLev _NONE = tLev( eLevel::NONE, "" );
    }
 
-   tCat cats[8] = { _def, _rimg, _A, _B, _C, _D, _tif };
-   std::vector<tCat> tLogImpl::_cats( cats, cats + 8 );
+   tCat cats[9] = { _def, _rimg, _A, _B, _C, _D, _tif, _alloc };
+   std::vector<tCat> tLogImpl::_cats( cats, cats + 9 );
+
    tLev levs[6] = { _DEBUG_, _INFO, _WARN, _ERROR_, _FATAL, _NONE };
    std::vector<tLev> tLogImpl::_levs( levs, levs + 6 );
 
-   string tLogImpl::to_string( eLevel lev_ )const {
+   string tLogImpl::to_string( eLevel lev_ ) {
       std::vector<tLev>::const_iterator f = find( _levs.begin(), _levs.end(), lev_ );
 
       if( f != _levs.end() ) {
@@ -259,8 +262,8 @@ namespace rlf_tlog {
       return string();
    }
 
-   string tLogImpl::to_string( eCategory cat_ )const {
-      std::vector<tCat>::const_iterator f = find( _cats.begin(), _cats.end(), cat_ );
+   string tLogImpl::to_string( eCategory cat_ ) {
+      auto f = find( _cats.begin(), _cats.end(), cat_ );
 
       if( f != _cats.end() ) {
          return f->name();
@@ -313,6 +316,48 @@ namespace rlf_tlog {
    }
 
 
+
+   // internal writer to logfile
+   bool tLogImpl::write( string const& msg ) const  {
+
+      // releases the lock at end of scope
+      boost::lock_guard<boost::mutex> lock( MUTEX );
+
+      std::ofstream fp( _file.c_str(), std::ios_base::app );
+
+      if( fp.bad() ) {
+         string s = "logfile: " + _file + " not found." ;
+         std::cout << s << std::endl;
+         return false;
+      }
+
+      // set time at start if line
+      logTime( fp );
+
+      // level
+      //string ls = to_string( lfmcl.level() );
+      //fp << " " << ls  << " ";
+
+      //size_t line = lfmcl.line();
+      //string cppfile = lfmcl.file();
+      //string method = lfmcl.method();
+
+      // append __LINE,__FILE__,__FUCTION__ to line
+      //lfm_InfoToStream( fp, line, cppfile, method );
+      //fp << ":";
+
+      // write category, if not default
+      //string cs = to_string( lfmcl.category() );
+
+      //      if( cs.size() > 0 ) {
+      //         fp << cs << ":" ;
+      //      }
+
+      // write the log message and finish the line
+      fp << " " << msg << std::endl;
+      return true;
+      // log file is implicitly closed by destructor from ofstream (RAII)
+   }
 
 
 
@@ -415,6 +460,17 @@ namespace rlf_tlog {
       write( lfmcl );
    }
 
+   void tLogImpl::log( int2type<false>, string const& ) const {
+      return;
+   }
+
+   void tLogImpl::log( int2type<true>, string const& s ) const {
+      if( _file.length() == 0 ) {
+         return;
+      }
+
+      write( s );
+   }
 
 
 

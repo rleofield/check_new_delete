@@ -33,7 +33,7 @@ namespace rlf_hstring {
       tTokens( tTokens const& );
       void operator=( tTokens const& );
    public:
-      tTokens( const std::string& str, std::string const& delims = " " );
+      tTokens( const std::string& str, std::string const& delims = " ", char trim_ch = ' ' );
       ~tTokens() {}
       std::vector<std::string> operator()()const {
          return _buffer;

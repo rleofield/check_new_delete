@@ -109,7 +109,8 @@ namespace rlf_hstring {
    }
 
 
-   void string_to_list( std::string const& s, std::list<std::string>& l ) ;
+   void string_to_list( std::string const& s, std::list<std::string>& l, char trim_ch = ' ' ) ;
+   void string_to_vector( std::string const& s, std::vector<std::string>& l, char trim_ch = ' ' ) ;
 
 
    namespace {
@@ -308,6 +309,7 @@ namespace rlf_hstring {
 
 
    // merge with delimiter
+   std::string merge( std::list<std::string>  const& v, std::string const& sep ) ;
    std::string merge( std::vector<std::string>  const& v, std::string const& sep ) ;
 
 
@@ -318,8 +320,10 @@ namespace rlf_hstring {
    ////////
 
    std::vector<std::string> tokenize( std::string const& str, const std::string& delimiters = " " );
-   std::vector<std::string> split( std::string const& line, std::string const& delimiters = " " );
-   std::vector<std::string> split( std::string const& l, char delim );
+   std::vector<std::string> split( std::string const& line,
+                                   std::string const& delimiters = " ",
+                                   char trim_ch = ' ' );
+   std::vector<std::string> split( std::string const& l, char delim, char trim_ch = ' ' );
 
 
 } // end ns

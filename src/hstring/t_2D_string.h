@@ -30,20 +30,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cstdint>
 
 
-//#include "boost_cstdint.h"
+
 #include "t_2D_xy.h"
 #include "stringhelper.h"
 
 
 namespace rlf_hstring {
 
-
-
    std::string toString( rlf_minit::uint32_xy p );
    std::string toString( rlf_minit::double_xy const& p );
    std::string toString( rlf_minit::float_xy const& p );
-
-
 
 }
 

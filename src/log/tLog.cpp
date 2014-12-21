@@ -88,6 +88,11 @@ namespace rlf_tlog {
       pImpl->log( int2type<useLog>(), lfm );
    }
 
+   void tLog::log( string const& s ) const {
+      //      std::cout << abc << std::endl;
+      //      std::cout << abc_ << std::endl;
+      pImpl->log( int2type<useLog>(), s );
+   }
 
    // gets singleton instance
    tLog const& logger() {

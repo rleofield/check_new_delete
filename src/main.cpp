@@ -64,6 +64,12 @@ impl.cpp
 
 
 
+using demo::tNotChecked;
+using demo::tChecked1;
+using demo::tChecked2;
+using demo::tChecked3;
+
+
 int main() {
 
    string logfile = "alloc_check";
@@ -75,25 +81,29 @@ int main() {
       cout << "setLogfile: " << logfile << " path for logging dosn't exist: '" << logfile <<  "'" << endl;
    }
 
-   logger().setLogLevel( eLevel::INFO, eCategory::_default );
+   logger().setLogLevel( eLevel::LDEBUG, eCategory::_default );
+   logger().setLogLevel( eLevel::LDEBUG, eCategory::Cat_Alloc );
 
    LOGT_INFO( " Start  " );
 
    try {
       // unchecked
-      demo::tDemoClassNotChecked* a = demo::tDemoClassNotChecked::Create( "DemoClassNotChecked" );
+      tNotChecked* a = tNotChecked::Create( "DemoClassNotChecked" );
 
       // checked
-      demo::tDemoClass1Checked* d = demo::tDemoClass1Checked::Create( "tDemoClass1Checked" );
-      demo::tDemoClass2Checked* p_c = demo::tDemoClass2Checked::Create( "tDemoClass2Checked" );
-      demo::tDemoClass3Checked* t = demo::tDemoClass3Checked::Create( "tDemoClass3Checked" );
-			//*((int*)p_c-1) = 1;
-			//*((int*)c-2) = 1;
-			//*((int*)c-3) = 1;
-			//*((int*)c-4) = 1;
-			//*((int*)c-5) = 1;
-			//*((int*)c-6) = 1;
-			//*((int*)c-7) = 1;
+      tChecked1* d = tChecked1::Create( "tDemoClass1Checked" );
+      tChecked2* p_c = tChecked2::Create( "tDemoClass2Checked" );
+      tChecked3* t = tChecked3::Create( "tDemoClass3Checked" );
+
+
+
+      //         *((char*)p_c-1) = 1;
+      //         *((char*)p_c-2) = 1;
+      //         *((char*)p_c-3) = 1;
+      //         *((char*)p_c-4) = 1;
+      //         *((char*)p_c-5) = 1;
+      //         *((char*)p_c-6) = 1;
+      //         *((char*)p_c-7) = 1;
 
       delete p_c;
       // d and t are memory leaks
@@ -107,5 +117,6 @@ int main() {
    }
 
    LOGT_INFO( alloccheck::alloc_list_message() );
+   LOGT_INFO( alloccheck::allocliststring() );
    return 0;
 }

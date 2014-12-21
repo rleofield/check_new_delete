@@ -36,22 +36,22 @@ using namespace std;
 
 namespace rlf_hstring {
 
-   tTokens::tTokens( const string& s, string const& delims ): _buffer() {
+   tTokens::tTokens( const string& s, string const& delims, char trim_ch ): _buffer() {
       string temp = s;
       size_t pos = temp.find_first_of( delims );
 
       while( pos != string::npos ) {
-         string t = trim( temp.substr( 0, pos ) );
+         string t = trim( temp.substr( 0, pos ), trim_ch );
 
          if( t.length() > 0 ) {
             _buffer.push_back( t );
          }
 
-         temp = trim( temp.substr( pos + 1 ) );
+         temp = trim( temp.substr( pos + 1 ), trim_ch );
          pos = temp.find_first_of( delims );
       }
 
-      _buffer.push_back( trim( temp ) );
+      _buffer.push_back( trim( temp, trim_ch ) );
    }
 
 } // end ns rlf_hstring

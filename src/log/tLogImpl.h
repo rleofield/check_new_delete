@@ -40,8 +40,9 @@ namespace rlf_tlog {
 
    class tLogImpl {
       bool write( tLfmCL const& w_ ) const ;
-      std::string to_string( eLevel lev_ )const;
-      std::string to_string( eCategory cat_ )const;
+      bool write( std::string const& msg ) const ;
+      static std::string to_string( eLevel lev_ );
+      static std::string to_string( eCategory cat_ );
       static std::vector<tCat> _cats;
       static std::vector<tLev> _levs;
    public:
@@ -63,6 +64,9 @@ namespace rlf_tlog {
       // writes to logfile
       void log( int2type<false>, tLfmCL const& lfmcl ) const ;
       void log( int2type<true>, tLfmCL const& lfmcl ) const ;
+
+      void log( int2type<false>, std::string const& ) const ;
+      void log( int2type<true>, std::string const& ) const ;
 
 
       static eLevel findLevel( int level );

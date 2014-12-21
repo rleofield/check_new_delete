@@ -34,9 +34,7 @@
  */
 namespace rlf_tlog {
    class tLogImpl;
-}
 
-namespace rlf_tlog {
 
    inline void noLogFunc() {
       return;
@@ -52,6 +50,7 @@ namespace rlf_tlog {
 
       // write 'txt' to logfile
       void log( tLfmCL const& lfmc ) const ;
+      void log( std::string const& ) const ;
 
       eLevel setLogLevelDebug( eCategory cat  = eCategory::_default )const;
       eLevel setLogLevelInfo( eCategory cat  = eCategory::_default )const;
