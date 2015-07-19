@@ -35,17 +35,9 @@ namespace rlf_hstring {
 
    namespace nsloc {
 
-#ifdef _WIN32
-      char const* const de = "German";
-#else
       const char* const de = "de_DE.utf8";
-#endif
 
-#ifdef _WIN32
-      char const* const ch = "German_Switzerland";
-#else
       const char* const ch = "de_CH.utf8";
-#endif
 
    }
    string getDE() {
@@ -70,8 +62,8 @@ namespace rlf_hstring {
       return boost::lexical_cast<string>( val );
    }
 
-   void string_to_list( string const& s, list<string>& l ) {
-      vector<string>  v = rlf_hstring::split( s, "\n" );
+   void string_to_list( string const& s, list<string>& l, char trim_ch ) {
+      vector<string>  v = rlf_hstring::split( s, "\n", trim_ch );
       l.assign( v.begin(), v.end() );
    }
 
@@ -102,19 +94,19 @@ namespace rlf_hstring {
       return false;
    }
 
-   string to_hex_0x( size_t val, size_t w ) {
+   string to_hex_0x( size_t val, int w ) {
       string lower = to_hex( val, w );
       to_upper_in_place( lower );
       return "0x" + lower;
    }
 
-   string to_hex( size_t val, size_t w ) {
+   string to_hex( size_t val, int w ) {
       std::ostringstream o;
       o <<  std::setfill( '0' ) << std::setw( w ) << hex << val;
       return o.str();
    }
 
-   string to_bin( size_t val, size_t w ) {
+   string to_bin( size_t val, int w ) {
       static const size_t bits = 64;
       //int sv = sizeof(val) * 8;
       string result = std::bitset<bits>( val ).to_string();

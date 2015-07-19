@@ -188,7 +188,7 @@ namespace rlf_tlog {
          }
       }
 
-      void fill( std::ostream& o, size_t w, int val ) {
+      void fill( std::ostream& o, int w, int val ) {
          char fill = '0';
          o << std::setfill( fill ) << std::setw( w )  << val;
       }

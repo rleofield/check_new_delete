@@ -35,13 +35,13 @@ namespace rlf_hstring {
       return "(" + toString( p.x() ) + "," + toString( p.y() ) + ")";
    }
    std::string toString( double_xy const& p ) {
-      size_t w = 6;
-      size_t prec = 2;
+      int w = 6;
+      int prec = 2;
       return "(" + toString( p.x(), w, prec ) + "," + toString( p.y(), w, prec ) + ")";
    }
    std::string toString( float_xy const& p ) {
-      size_t w = 6;
-      size_t prec = 2;
+      int w = 6;
+      int prec = 2;
       return "(" + toString( p.x(), w, prec ) + "," + toString( p.y(), w, prec ) + ")";
    }
 

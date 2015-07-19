@@ -302,15 +302,15 @@ namespace alloccheck {
             check.count_add( 1 );
             check.total_add( size );
             auto& allocList = check.alloc_list();
-            auto it = allocList.find( ( size_t )ptr_alloc_header );
+            auto it = allocList.find( reinterpret_cast<size_t>( ptr_alloc_header ) );
 
             if( it != allocList.end() ) {
-               string ll = grepMarker + " 'alloc map has used key':  " + stringify( ( size_t )ptr_alloc_header ) + ", info: " + info + "'";
+               string ll = grepMarker + " 'alloc map has used key':  " + stringify( reinterpret_cast<size_t>( ptr_alloc_header ) ) + ", info: " + info + "'";
                err( ll );
                exit( 0 );
             }
 
-            check.add( ( size_t )p, info );
+            check.add( reinterpret_cast<size_t>( p ), info );
          }
          auto logLine = grepMarker + ", new, cnt: " + check.scount() + ", info: " + info;
          log( logLine );
@@ -322,7 +322,7 @@ namespace alloccheck {
       // wird von delete() aufgerufen
       // empty variant, used, if use_alloc_check == false;
       void checked_delete( int2type<false>, void* p )  {
-         delete []( ( char* )p );
+         delete []( static_cast<char*>( p ) );
          return;
       }
 
