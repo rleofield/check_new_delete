@@ -62,14 +62,23 @@ namespace rlf_hstring {
       return boost::lexical_cast<string>( val );
    }
 
-   void string_to_list( string const& s, list<string>& l, char trim_ch ) {
-      vector<string>  v = rlf_hstring::split( s, "\n", trim_ch );
-      l.assign( v.begin(), v.end() );
+//   void string_to_list( string const& s, list<string>& l, char sep_ch ) {
+//      vector<string>  v = rlf_hstring::split( s, sep_ch );
+//      l.assign( v.begin(), v.end() );
+//   }
+   list<string>  string_to_list( string const& s, char delim ) {
+      string d( 1, delim );
+      vector<string>  v = rlf_hstring::split( s, d );
+      list<string> l( v.begin(), v.end() );
+      return std::move(l);
    }
 
-   void string_to_vector( string const& s, vector<string>& v, char trim_ch ) {
-      vector<string> const& r = rlf_hstring::split( s, "\n", trim_ch );
-      v.insert( v.end(), r.begin(), r.end() );
+//   void string_to_vector( string const& s, vector<string>& v, char sep_ch ) {
+//      vector<string> const& r = rlf_hstring::split( s, sep_ch );
+//      v.insert( v.end(), r.begin(), r.end() );
+//   }
+    vector<string> string_to_vector( string const& s, char sep_ch ) {
+      return std::move(rlf_hstring::split( s, sep_ch ));
    }
 
    // converts a hex string to size_t
@@ -90,7 +99,7 @@ namespace rlf_hstring {
          return false;
       }
 
-      string temp = to_upper( s );
+      //string temp = to_upper( s );
       return false;
    }
 
@@ -264,9 +273,6 @@ namespace rlf_hstring {
       return s.find( pattern, pos );
    }
 
-   bool contains( string const& s, string const& pattern ) {
-      return s.find( pattern, string::npos ) != string::npos;
-   }
 
 
    size_t index_right( string const& s, const string& pattern ) {

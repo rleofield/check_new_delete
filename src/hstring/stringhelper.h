@@ -29,8 +29,9 @@
 #include <typeinfo>
 #include <stdexcept>
 #include <vector>
+#include <list>
 #include <assert.h>
-#include <boost/tr1/regex.hpp>
+//#include <boost/tr1/regex.hpp>
 
 
 namespace rlf_hstring {
@@ -109,8 +110,12 @@ namespace rlf_hstring {
    }
 
 
-   void string_to_list( std::string const& s, std::list<std::string>& l, char trim_ch = ' ' ) ;
-   void string_to_vector( std::string const& s, std::vector<std::string>& l, char trim_ch = ' ' ) ;
+   //void string_to_list( std::string const& s, std::list<std::string>& l, char trim_ch = ' ' ) ;
+   //void string_to_vector( std::string const& s, std::vector<std::string>& l, char trim_ch = ' ' ) ;
+
+   // move
+   std::list<std::string> string_to_list( std::string const& s, char trim_ch = ' ' ) ;
+   std::vector<std::string> string_to_vector( std::string const& s, char trim_ch = ' ' ) ;
 
 
    namespace {
@@ -263,7 +268,9 @@ namespace rlf_hstring {
    size_t index( std::string const& s, std::string const& pattern, size_t pos = 0 ) ;
    size_t index_right( std::string const& s, const std::string& pattern ) ;
 
-   bool contains( std::string const& s, std::string const& pattern );
+   inline bool contains( std::string const& s, std::string const& pattern ) {
+      return index( s, pattern, 0 ) != std::string::npos;
+   }
 
    ////////
    // ersetzen, einmalig oder alle
