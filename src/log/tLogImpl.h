@@ -55,7 +55,7 @@ namespace rlf_tlog {
 
       void setLogLevel( eLevel level, eCategory cat )const;
       bool check( eCategory cat, eLevel levFunction )const;
-      eLevel getLogLevel( eCategory cat )const;
+      eLevel level( eCategory cat = eCategory::_default )const;
 
       // sets the logfile, doesn't change loglevel
       bool setLogfile( std::string const& file )const;
@@ -69,8 +69,8 @@ namespace rlf_tlog {
       void log( int2type<true>, std::string const& ) const ;
 
 
-      static eLevel findLevel( int level );
-      static eCategory findCategory( int cat );
+      //static eLevel findLevel( int level );
+      //static eCategory findCategory( int cat );
 
 
    };

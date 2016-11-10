@@ -28,7 +28,6 @@
 #include <iomanip>
 #include <algorithm>
 
-
 #include "gettokens.h"
 #include "stringhelper.h"
 

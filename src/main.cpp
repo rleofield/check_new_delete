@@ -81,8 +81,8 @@ int main() {
       cout << "setLogfile: " << logfile << " path for logging dosn't exist: '" << logfile <<  "'" << endl;
    }
 
-   logger().setLogLevel( eLevel::LDEBUG, eCategory::_default );
-   logger().setLogLevel( eLevel::LDEBUG, eCategory::Cat_Alloc );
+   logger().log_level( eLevel::LDEBUG, eCategory::_default );
+   logger().log_level( eLevel::LDEBUG, eCategory::Cat_Alloc );
 
    LOGT_INFO( " Start  " );
 

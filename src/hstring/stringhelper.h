@@ -263,6 +263,7 @@ namespace rlf_hstring {
    size_t index( std::string const& s, std::string const& pattern, size_t pos = 0 ) ;
    size_t index_right( std::string const& s, const std::string& pattern ) ;
 
+   bool contains( std::string const& s, std::string const& pattern );
 
    ////////
    // ersetzen, einmalig oder alle

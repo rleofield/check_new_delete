@@ -32,8 +32,8 @@ using rlf_tlfm::t_lfm;
 namespace alloccheck {
 
    // set to false, to switch off all checked new/delete
-   const bool use_alloc_check = false;
-   const bool use_alloc_check_log = false;
+   const bool use_alloc_check = true;
+   const bool use_alloc_check_log = true;
 
 
    // get the count of not deleted unchecked pointers, must be zero

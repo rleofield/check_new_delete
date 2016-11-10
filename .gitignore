@@ -5,3 +5,4 @@ check_new_delete
 /bin/
 /*.log
 /*.user
+*.qmake.stash

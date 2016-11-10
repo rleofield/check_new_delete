@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "tLogImpl.h"
 
-#include "win32.h"
 
 
 
@@ -394,16 +393,16 @@ namespace rlf_tlog {
          return;
       }
 
-      std::vector<tLev>::const_iterator level = find( _levs.begin(), _levs.end(), level_ );
+      std::vector<tLev>::const_iterator _level = find( _levs.begin(), _levs.end(), level_ );
 
-      if( level == _levs.end() ) {
+      if( _level == _levs.end() ) {
          return;
       }
 
-      category->cat_level( *level );
+      category->cat_level( *_level );
    }
 
-   eLevel tLogImpl::getLogLevel( eCategory cat )const {
+   eLevel tLogImpl::level( eCategory cat )const {
       std::vector<tCat>::const_iterator category = find( _cats.begin(), _cats.end(), cat );
 
       if( category == _cats.end() ) {
@@ -413,29 +412,29 @@ namespace rlf_tlog {
       return category->cat_level();
    }
 
-   eLevel tLogImpl::findLevel( int level_ ) {
-      std::vector<tLev>::const_iterator level = find( _levs.begin(), _levs.end(), level_ );
+   //   eLevel tLogImpl::findLevel( int level_ ) {
+   //      std::vector<tLev>::const_iterator level = find( _levs.begin(), _levs.end(), level_ );
 
-      if( level == _levs.end() ) {
-         return eLevel::NONE;
-      }
+   //      if( level == _levs.end() ) {
+   //         return eLevel::NONE;
+   //      }
 
-      return *level;
-   }
-   eCategory tLogImpl::findCategory( int cat_ ) {
+   //      return *level;
+   //   }
+   //   eCategory tLogImpl::findCategory( int cat_ ) {
 
-      std::vector<tCat>::iterator category = find( _cats.begin(), _cats.end(), cat_ );
+   //      std::vector<tCat>::iterator category = find( _cats.begin(), _cats.end(), cat_ );
 
-      if( category == _cats.end() ) {
-         return eCategory::_default;
-      }
+   //      if( category == _cats.end() ) {
+   //         return eCategory::_default;
+   //      }
 
-      return *category;
-   }
+   //      return *category;
+   //   }
 
 
    bool tLogImpl::check( eCategory cat, eLevel levFunction ) const {
-      eLevel level_category = getLogLevel( cat );
+      eLevel level_category = level( cat );
 
       if( level_category > levFunction ) {
          return true;

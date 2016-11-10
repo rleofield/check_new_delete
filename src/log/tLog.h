@@ -52,13 +52,13 @@ namespace rlf_tlog {
       void log( tLfmCL const& lfmc ) const ;
       void log( std::string const& ) const ;
 
-      eLevel setLogLevelDebug( eCategory cat  = eCategory::_default )const;
-      eLevel setLogLevelInfo( eCategory cat  = eCategory::_default )const;
-      eLevel setLogLevelWarn( eCategory cat  = eCategory::_default )const;
-      eLevel setLogLevelError( eCategory cat  = eCategory::_default )const;
-      eLevel setLogLevelFatal( eCategory cat  = eCategory::_default )const;
+      eLevel set_debug( eCategory cat  = eCategory::_default )const;
+      eLevel set_info( eCategory cat  = eCategory::_default )const;
+      eLevel set_warn( eCategory cat  = eCategory::_default )const;
+      eLevel set_error( eCategory cat  = eCategory::_default )const;
+      eLevel set_fatal( eCategory cat  = eCategory::_default )const;
 
-      eLevel setLogLevel( eLevel level, eCategory cat  = eCategory::_default )const;
+      eLevel log_level( eLevel level, eCategory cat  = eCategory::_default )const;
       eLevel getLogLevel( eCategory cat  = eCategory::_default )const;
 
       // sets the logfile, doesn't change loglevel
@@ -66,8 +66,8 @@ namespace rlf_tlog {
       bool setLogfileWithDate( std::string const& file )const;
 
       // for Client Interface, convert ints to enum
-      static eLevel findLevel( int level );
-      static eCategory findCategory( int cat );
+      //static eLevel findLevel( int level );
+      //static eCategory findCategory( int cat );
 
 
    private:
@@ -91,7 +91,7 @@ namespace rlf_tlog {
 #define L_B_DEBUG
 #define L_C_DEBUG
 #define L_D_DEBUG
-
+#define L_RIMG_DEBUG
 
 #endif
 

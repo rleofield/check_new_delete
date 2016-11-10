@@ -65,6 +65,8 @@ namespace rlf_tlfm {
       ~t_lfm() {}
    };
 
+   //typedef t_lfm1 t_lfm;
+
    // use of parameterobject for line, file, method
    t_lfm tlog_lfm( uint32_t line_, std::string const& file_, std::string const& method_ );
 

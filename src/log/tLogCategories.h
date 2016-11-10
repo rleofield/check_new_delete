@@ -36,18 +36,18 @@
 
 namespace rlf_tlog {
 
-   /*! \class tLev
+   /*! \class tLogLevel
    \brief parameterobject for LogLevel
 
    */
 
-   class tLev {
+   class tLogLevel {
       eLevel _lev;
       std::string _name;
    public:
-      tLev(): _lev( eLevel::NONE ), _name() {}
-      tLev( eLevel a, std::string n ): _lev( a ), _name( n ) {}
-      ~tLev() {}
+      tLogLevel(): _lev( eLevel::NONE ), _name() {}
+      tLogLevel( eLevel a, std::string n ): _lev( a ), _name( n ) {}
+      ~tLogLevel() {}
       operator eLevel()const {
          return _lev;
       }
@@ -67,20 +67,22 @@ namespace rlf_tlog {
       }
    };
 
-   /*! \class tCat
+   typedef  tLogLevel tLev;
+
+   /*! \class tLogCategory
    \brief parameterobject for Category, uses tLev
 
    */
-   class tCat {
+   class tLogCategory {
       eCategory _cat;
       std::string _name;
       tLev _cat_level;
    public:
-      tCat(): _cat( eCategory::_default ), _name(), _cat_level() {}
-      tCat( eCategory a, std::string n ): _cat( a ), _name( n ), _cat_level() {
+      tLogCategory(): _cat( eCategory::_default ), _name(), _cat_level() {}
+      tLogCategory( eCategory a, std::string n ): _cat( a ), _name( n ), _cat_level() {
 
       }
-      ~tCat() {}
+      ~tLogCategory() {}
       operator eCategory()const {
          return _cat;
       }
@@ -105,7 +107,7 @@ namespace rlf_tlog {
          return _cat_level;
       }
    };
-
+   typedef  tLogCategory tCat;
 }
 
 #endif

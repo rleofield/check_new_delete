@@ -46,39 +46,39 @@ namespace rlf_tlog {
       delete pImpl;
    }
 
-   eLevel tLog::setLogLevelDebug( eCategory cat )const {
-      return setLogLevel( eLevel::LDEBUG, cat );
+   eLevel tLog::set_debug( eCategory cat )const {
+      return log_level( eLevel::LDEBUG, cat );
    }
-   eLevel tLog::setLogLevelInfo( eCategory cat )const {
-      return setLogLevel( eLevel::INFO, cat );
+   eLevel tLog::set_info( eCategory cat )const {
+      return log_level( eLevel::INFO, cat );
    }
-   eLevel tLog::setLogLevelWarn( eCategory cat )const {
-      return setLogLevel( eLevel::WARN, cat );
+   eLevel tLog::set_warn( eCategory cat )const {
+      return log_level( eLevel::WARN, cat );
    }
-   eLevel tLog::setLogLevelError( eCategory cat )const {
-      return setLogLevel( eLevel::LERROR, cat );
+   eLevel tLog::set_error( eCategory cat )const {
+      return log_level( eLevel::LERROR, cat );
    }
-   eLevel tLog::setLogLevelFatal( eCategory cat )const {
-      return setLogLevel( eLevel::FATAL, cat );
+   eLevel tLog::set_fatal( eCategory cat )const {
+      return log_level( eLevel::FATAL, cat );
    }
 
 
 
-   eLevel tLog::setLogLevel( eLevel level_, eCategory cat )const {
-      eLevel tmp = pImpl->getLogLevel( cat );
+   eLevel tLog::log_level( eLevel level_, eCategory cat )const {
+      eLevel tmp = pImpl->level( cat );
       pImpl->setLogLevel( level_, cat );
       return tmp;
    }
    eLevel tLog::getLogLevel( eCategory cat )const {
-      eLevel tmp = pImpl->getLogLevel( cat );
+      eLevel tmp = pImpl->level( cat );
       return tmp;
    }
-   eLevel tLog::findLevel( int level ) {
-      return tLogImpl::findLevel( level );
-   }
-   eCategory tLog::findCategory( int cat ) {
-      return tLogImpl::findCategory( cat );
-   }
+   //   eLevel tLog::findLevel( int level ) {
+   //      return tLogImpl::findLevel( level );
+   //   }
+   //   eCategory tLog::findCategory( int cat ) {
+   //      return tLogImpl::findCategory( cat );
+   //   }
 
 
 
